@@ -42,7 +42,7 @@ Có thể bật riêng từng phần:
 | Khu vực | Có thể ẩn |
 |---|---|
 | Danh sách hội thoại | Tin nhắn, tên, ảnh đại diện |
-| Khung chat | Nội dung tin nhắn, ảnh và album, tên và avatar |
+| Khung chat | Nội dung tin nhắn, ảnh và album, sticker, danh thiếp, mã QR, vị trí, tin OA, dòng hệ thống, tin ghim, tên và số thành viên, avatar |
 | Trình xem ảnh | Ảnh, ảnh thu nhỏ, người gửi |
 
 Phần bị ẩn hiện lại khi rê chuột vào. Khi đang che, pet có thể tự phóng to (tuỳ chọn).

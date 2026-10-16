@@ -29,8 +29,12 @@ body.zg-hide-avatar .conv-item:hover .zavatar > * { visibility: visible; }
 
 /* mục trong sidebar + menu */
 #zg-nav { cursor: pointer; opacity: 0.7; color: var(--icon-navbar-normal); }
+#zg-nav { position: relative; transition: all .1s cubic-bezier(.645, .045, .355, 1); }
 #zg-nav:hover, #zg-nav.on { opacity: 1; }
-#zg-nav svg { width: 24px; height: 24px; }
+/* nền hover giống .leftbar-tab:hover .mmi-icon-wr của Zalo: ô bo 6px, lề 8px ngang / 4px dọc */
+#zg-nav::before { content: ""; position: absolute; inset: 4px 8px; border-radius: 6px; transition: inherit; }
+#zg-nav:hover::before { background: var(--layer-background-navbar-hover); }
+#zg-nav svg { position: relative; width: 24px; height: 24px; }
 
 /* hộp thoại tuỳ chọn, theo phong cách hộp Cài đặt của Zalo: lớp phủ #zg-menu bao hộp .zg-dlg (tiêu đề / nội dung cuộn / chân trang) */
 #zg-menu { position: fixed; inset: 0; z-index: 99999; display: none; align-items: center; justify-content: center; background: var(--curtain); }
@@ -132,7 +136,7 @@ body.zg-hide-cmsg #chatViewContainer:not(:hover) :is(.chat-group-topic__item, .c
 
 body.zg-hide-cname #chatViewContainer:not(:hover) #richInput.empty::before { content: "••••••••"; letter-spacing: 1px; }
 
-body.zg-hide-cimg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) :is(.img-msg-v2, .album, .video-message__non-caption-wrapper, .video-message__w-caption-wrapper, .file-video-message) { background: #f3f4fa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b3b9cf' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='3'/%3E%3Ccircle cx='9' cy='10' r='1.8'/%3E%3Cpath d='M3 17l5-4.5 4 3.5 3-2.5 6 4.5'/%3E%3C/svg%3E") center / 44px no-repeat !important; border-radius: 12px; box-shadow: var(--shadow-bubble); }
+body.zg-hide-cimg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) :is(.img-msg-v2, .album, .video-message__non-caption-wrapper, .video-message__w-caption-wrapper, .file-video-message) { background: var(--zg-skel) !important; border-radius: 12px; box-shadow: var(--shadow-bubble); }
 body.zg-hide-cimg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) :is(.img-msg-v2, .album, .video-message__non-caption-wrapper, .video-message__w-caption-wrapper, .file-video-message) * { visibility: hidden !important; }
 body.zg-hide-cimg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) :is(.zg-ab, .zg-count) { display: none !important; }
 body.zg-hide-cname #chatViewContainer:not(:hover) :is(.avatar--overlay, .threadChat__avatar) { background: var(--layer-background-hover); border-radius: 50%; }
@@ -147,7 +151,7 @@ body.zg-hide-view :is(img.zimg-el, img.a-child):hover { filter: none; }
 
 /* tin file: icon file có visibility riêng nên lọt qua lớp che → thay bằng ô trắng; chấm vẽ ở cột tên file thay vì góc khung (đè lên icon) */
 body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .file-message__container::after { content: none; }
-body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .file-message__container .file-tit-box { visibility: visible !important; background: #f3f4fa; border-radius: 8px; }
+body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .file-message__container .file-tit-box { visibility: visible !important; background: transparent; border-radius: 8px; }
 body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .file-message__container .file-tit-box * { visibility: hidden !important; }
 body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .file-message__container .file-message__content { position: relative; visibility: visible !important; }
 body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .file-message__container .file-message__content > * { visibility: hidden !important; }
@@ -155,7 +159,7 @@ body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-f
 
 /* tin có trích dẫn (reply): chấm vẽ trong cột chữ (cạnh thumbnail) thay vì góc khung; thumbnail → ô trắng, giữ chỗ */
 body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .message-quote-fragment__container > * { visibility: hidden !important; }
-body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .message-quote-fragment__icon-wrapper { visibility: visible !important; background: #f3f4fa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b3b9cf' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='3'/%3E%3Ccircle cx='9' cy='10' r='1.8'/%3E%3Cpath d='M3 17l5-4.5 4 3.5 3-2.5 6 4.5'/%3E%3C/svg%3E") center / 22px no-repeat; border-radius: 3px; }
+body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .message-quote-fragment__icon-wrapper { visibility: visible !important; background: transparent; border-radius: 3px; }
 body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .message-quote-fragment__icon-wrapper * { visibility: hidden !important; }
 body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .message-quote-fragment__content-container { position: relative; visibility: visible !important; }
 body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .message-quote-fragment__content-container > * { visibility: hidden !important; }
@@ -167,7 +171,7 @@ body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-f
 body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .text-message__container:has(.message-quote-fragment__container) > div:not(.message-quote-fragment__container)::after { content: "••••••••"; position: absolute; left: 0; top: 0; letter-spacing: 1px; color: var(--text-secondary); font-size: 15px; line-height: 22px; pointer-events: none; }
 
 /* sticker: giữ chỗ bằng skeleton như ảnh; badge giờ nổi của tin ảnh/sticker → làm mờ */
-body.zg-hide-cimg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .sticker-message-content-wrapper { background: #f3f4fa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b3b9cf' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='3'/%3E%3Ccircle cx='9' cy='10' r='1.8'/%3E%3Cpath d='M3 17l5-4.5 4 3.5 3-2.5 6 4.5'/%3E%3C/svg%3E") center / 44px no-repeat; border-radius: 12px; box-shadow: var(--shadow-bubble); }
+body.zg-hide-cimg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .sticker-message-content-wrapper { background: var(--zg-skel); border-radius: 12px; box-shadow: var(--shadow-bubble); }
 body.zg-hide-cimg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .sticker-message-content-wrapper * { visibility: hidden !important; }
 
 
@@ -189,3 +193,29 @@ html.zg-mac .zl-modal__dialog:has(.share-msg__conv-item) .zl-modal__footer__butt
 body.dark .multi-select-mode-selected .card { background-color: rgb(var(--zg-primary) / .75) !important; }
 .multisel-info { background: rgba(250, 250, 254, .85) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
 body.dark .multisel-info { background: rgba(34, 38, 43, .85) !important; }
+
+/* ô giữ chỗ (ảnh/video/sticker/thumbnail) khi che: không icon, tô cùng màu bong bóng tin (xanh nếu tin của mình); icon file trong suốt */
+body { --zg-skel: var(--white-message); }
+body [id^="bb_msg_id"]:is(.me, :has(.me)) { --zg-skel: var(--blue-message); }
+/* mọi bong bóng tin (của mình lẫn người khác): bỏ dấu chấm, chữ vẫn ẩn, layout giữ nguyên; chỉ giữ chấm ở tên người gửi */
+body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) *::after { content: none !important; }
+
+/* nhóm: ẩn bong bóng tên người gửi (không còn chấm), số thành viên, nút tải sticker; bỏ viền xanh tin của trưởng/phó nhóm */
+body.zg-hide-cname #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .message-sender-name-bubble { visibility: hidden !important; }
+/* số thành viên + dấu "Cộng đồng •" ở tiêu đề (nhóm: .subtitle__groupmember__content, cộng đồng: .community__chat-box-indicator) */
+body.zg-hide-cname #chatViewContainer:not(:hover) .threadChat__title :is(.subtitle__groupmember__content, .community__chat-box-indicator, .new-separator) { visibility: hidden !important; }
+body.zg-hide-cimg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) .download-entry-point { visibility: hidden !important; }
+body:is(.zg-hide-cmsg, .zg-hide-cimg) #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) { --border-highlight: transparent; }
+
+/* tin dạng thẻ (danh thiếp, mã QR chuyển khoản .instant-message, vị trí, tin OA): khung giữ chỗ cùng màu bong bóng, ruột ẩn */
+body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) :is(.contact-message__container, .instant-message, .location-message__container, .card--oa) { background: var(--zg-skel) !important; border-radius: 12px; color: transparent !important; }
+body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) :is(.contact-message__container, .instant-message, .location-message__container, .card--oa) * { visibility: hidden !important; }
+/* nội dung tin zinstant (QR, thẻ OA) nằm trong shadow DOM tự đặt visibility → dùng opacity */
+body.zg-hide-cmsg #chatViewContainer:not(:hover) [id^="bb_msg_id"]:not(.zg-msg-focus) z-instant { opacity: 0 !important; }
+/* dòng hệ thống ("Bạn đã ghim tin nhắn…", thêm thành viên…): ẩn hẳn, giữ chỗ */
+body.zg-hide-cmsg #chatViewContainer:not(:hover) .message-info { visibility: hidden !important; }
+/* tin ghim: thumbnail + chữ ở thanh ghim và danh sách ghim mở rộng (cả dòng tiêu đề) */
+body.zg-hide-cmsg #chatViewContainer:not(:hover) :is(.chat-group-topic__item, .topic-board-details) * { visibility: hidden !important; }
+/* danh sách ghim mở rộng đè lên khung chat: nền kính + blur để không lộ tin phía sau */
+.topic-board-details { background-color: rgba(22, 24, 44, .62) !important; backdrop-filter: blur(24px) saturate(170%); -webkit-backdrop-filter: blur(24px) saturate(170%); }
+body:not(.dark) .topic-board-details { background-color: rgba(255, 255, 255, .72) !important; }

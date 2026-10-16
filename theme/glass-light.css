@@ -92,10 +92,11 @@ body:not(.dark)::before {
 }
 
 body:not(.dark) :is(.zl-modal__dialog, .zmenu-body, .zmenu, .popover, .tooltip, .toast,
-  [class*="popover"], [class*="context-menu"], [class*="dropdown-menu"]) {
+  [class*="popover"]:not([class*="item"], [class*="__"], [class*="--"], [class*="arrow"], [class*="seperator"]), [class*="context-menu"]:not([class*="item"], [class*="__"], [class*="--"], [class*="arrow"], [class*="seperator"]), [class*="dropdown-menu"]:not([class*="item"], [class*="__"], [class*="--"], [class*="arrow"], [class*="seperator"])) {
   background-color: rgba(255, 255, 255, 0.72) !important;
   border-color: rgba(255, 255, 255, 0.8);
 }
+body:not(.dark) :is(.popover, .zmenu-body, .zmenu, [class*="popover"], [class*="context-menu"]) :is(.zmenu-body, .zmenu, .popover) { background-color: transparent !important; border-color: transparent; }
 
 body:not(.dark) #sidebarNav.compact-mode ~ * main,
 body:not(.dark) .contact-pages.page-container,

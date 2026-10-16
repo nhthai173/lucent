@@ -141,9 +141,9 @@ body::before {
 .popover,
 .tooltip,
 .toast,
-[class*="popover"],
-[class*="context-menu"],
-[class*="dropdown-menu"] {
+[class*="popover"]:not([class*="item"], [class*="__"], [class*="--"], [class*="arrow"], [class*="seperator"]),
+[class*="context-menu"]:not([class*="item"], [class*="__"], [class*="--"], [class*="arrow"], [class*="seperator"]),
+[class*="dropdown-menu"]:not([class*="item"], [class*="__"], [class*="--"], [class*="arrow"], [class*="seperator"]) {
   background-color: rgba(22, 24, 44, 0.62) !important;
   backdrop-filter: blur(28px) saturate(170%);
   -webkit-backdrop-filter: blur(28px) saturate(170%);
@@ -151,6 +151,12 @@ body::before {
 }
 
 .zl-modal__dialog { border-radius: 16px !important; overflow: hidden; }
+
+/* menu: chỉ khung ngoài là kính; lớp kính lồng nhau và từng mục (.zmenu-item có nền riêng của Zalo) thì trong suốt để cùng một nền */
+:is(.popover, .zmenu-body, .zmenu, [class*="popover"], [class*="context-menu"]) :is(.zmenu-body, .zmenu, .popover) {
+  background-color: transparent !important; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0;
+}
+.zmenu-item:not(:hover, .hovered) { background-color: transparent !important; }
 
 /* cửa sổ hẹp: khung chat đè lên danh sách hội thoại, danh bạ đè lên menu danh bạ, panel tìm kiếm đè lên khung chat.
    Nền trong suốt thì chữ lớp dưới lộ ra → dùng nền đặc pha sẵn ánh ambient (backdrop-filter không ăn ở các lớp này). */
