@@ -37,6 +37,8 @@ Probabilities: walk 45 %, hop 10 %, gag 25 %, nothing 20 %. The loop only acts w
 
 Clicks: `sprite.addEventListener("click", …)`: 5 clicks → mad; otherwise 50 % `gag()` else `hop()` + `say(pick(T.lines))`.
 
+For Luffy's optional `forms`, the existing 1-second `tick()` checks a 10-second deadline and selects a different form when due. Hidden/unfocused windows, sleep, big mode and busy actions defer the change; the next eligible tick changes once and starts a fresh 10-second deadline, without catching up missed periods or adding a timer. Loading a pet resets the deadline. Shift + click cancels any current gag, changes to another random form immediately and restarts the 10-second deadline. Changing form neither speaks nor interrupts walking. A normal click always runs the current form's `attack`, replacing a different active gag; repeated clicks during that attack do not restart or stack it. This replaces the random click/five-click mad behaviour only for pets with forms. The idle loop and shared speech triggers retain the original behaviour above. Idle gag selection excludes attacks belonging to other forms. Attacks use the normal gag lock and cleanup, with finite CSS animations scoped to each attack class.
+
 ## Anatomy of a gag
 
 A gag is made of four independent parts. All four must exist.

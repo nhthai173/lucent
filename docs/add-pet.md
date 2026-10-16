@@ -46,6 +46,7 @@ gau: fill("Gấu", { fur: "#c8956d", dark: "#a8774f", belly: "#f1d9c0", inner: "
 | `typing`, `mad` | extras | no | Override the shared `TYPING` / `MAD` arrays |
 | `gags` | extras | no | Override the shared `GAGS` (must be a complete object, not a patch) |
 | `css` | extras | no | A CSS string injected into a `<style>` when this pet is active, replaced on switch |
+| `forms` | extras | no | Array of `{ name, svg, line, attack }`; requires a `.zl-rest` group in `svg`. Last entry is the initial form. The existing 1-second tick selects a different form every 10 seconds when eligible; Shift + click changes immediately and resets the deadline. Changes are silent; `line` is descriptive data only. Normal clicks always run the current form's `attack` gag; idle behaviour stays unchanged. Current form is kept only for this session. Used by Luffy |
 | `name` | first arg | yes | Vietnamese card label |
 
 Where to put the new `ears`/`mark` helpers: next to `CAT_EARS`, `BUNNY_EARS`, `STRIPES` (just above `GAGS`). They must be defined before `PETS`.
