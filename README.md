@@ -16,11 +16,11 @@ Giao diện kính mờ (glassmorphism) cho Zalo PC trên macOS, Windows và Linu
 
 Lucent thay giao diện mặc định của Zalo PC bằng nền kính mờ, có bốn theme và hai chế độ sáng/tối. Ngoài giao diện, Lucent bổ sung một số tiện ích còn thiếu trong Zalo: che nội dung khi cần, chọn chữ trên ảnh (OCR), dịch tin nhắn, kéo file ra ngoài, xem album theo dải ngang, phím tắt và giảm mức dùng tài nguyên.
 
-Lucent không cần cài thêm phần mềm nào và không có phụ thuộc. Trình cài đặt chèn CSS/JS vào `app.asar` của Zalo, giống cách ZaDark làm, đồng thời sao lưu bản gốc để khôi phục khi cần.
+Lucent không có phụ thuộc nào. Trình cài đặt chèn CSS/JS vào `app.asar` của Zalo (giống cách ZaDark làm) và sao lưu bản gốc để khôi phục khi cần. Riêng OCR và dịch trên macOS cần Xcode Command Line Tools để biên dịch helper lúc cài.
 
 ## Tính năng
 
-- **Theme:** Glass (tím), Đại dương, Hoàng hôn, Rừng. Mỗi theme có bản sáng và tối, đổi ngay không cần khởi động lại.
+- **Theme:** Glass (tím), Đại dương, Hoàng hôn, Rừng, hoặc giao diện gốc của Zalo. Mỗi theme có bản sáng và tối, đổi ngay không cần khởi động lại.
 - **Che nội dung:** ẩn tin nhắn, tên, ảnh đại diện, ảnh và album theo từng nhóm.
 - **OCR trên ảnh:** chọn và sao chép chữ trong trình xem ảnh.
 - **Dịch tin nhắn:** dịch tin nhận và tin đang soạn ngay trong Zalo. Chạy trên máy với macOS, hoặc qua Google.
@@ -28,7 +28,7 @@ Lucent không cần cài thêm phần mềm nào và không có phụ thuộc. T
 - **Album cuộn ngang:** hiển thị ảnh gửi theo nhóm thành một dải ngang.
 - **Tạo cuộc họp Google Meet** từ menu của thanh công cụ chat.
 - **Phím tắt** để chuyển hội thoại và thao tác với tin nhắn bằng bàn phím.
-- **Tuỳ chọn hiệu năng:** giảm RAM, tắt tự cập nhật, giảm tải khi cửa sổ bị ẩn.
+- **Tuỳ chọn hiệu năng:** giảm RAM, tắt tự cập nhật, giảm tải khi cửa sổ bị ẩn, tắt chụp màn hình và gọi điện của Zalo nếu không dùng.
 - **Pet:** bốn nhân vật nhỏ ở góc màn hình, có nhiều trạng thái, có thể tắt.
 
 ### Theme
@@ -47,18 +47,18 @@ Có thể bật riêng từng phần:
 | Khung chat | Nội dung tin nhắn, ảnh và album, sticker, danh thiếp, mã QR, vị trí, tin OA, dòng hệ thống, tin ghim, tên và số thành viên, avatar |
 | Trình xem ảnh | Ảnh, ảnh thu nhỏ, người gửi |
 
-Phần bị ẩn hiện lại khi rê chuột vào. Khi đang che, pet có thể tự phóng to (tuỳ chọn).
+Phần bị ẩn hiện lại khi rê chuột vào khung chat. Khi đang che, pet có thể tự phóng to (tuỳ chọn).
 
 <p align="center"><img src="docs/img/privacy.jpg" alt="Danh sách hội thoại và khung chat khi bật che nội dung" width="820"></p>
 
 ### Bảng tuỳ chọn
 
-Nút con mắt ở thanh bên mở bảng tuỳ chọn gồm phần che nội dung, theme, pet và hiệu năng. Thiết lập được lưu theo từng máy.
+Nút con mắt ở thanh bên mở bảng tuỳ chọn: che nội dung, kiểu hiển thị ảnh trong hội thoại, dịch tin nhắn, OCR, theme, pet và hiệu năng. Phần hiệu năng áp dụng khi mở lại Zalo, các phần còn lại đổi ngay. Thiết lập được lưu theo từng máy.
 
 <table>
 <tr>
 <td width="50%" valign="top"><img src="docs/img/options.jpg" alt="Bảng tuỳ chọn"></td>
-<td width="50%" valign="top"><img src="docs/img/themes-pets.jpg" alt="Chọn theme và pet"></td>
+<td width="50%" valign="top"><img src="docs/img/themes-pets.jpg" alt="Theme, pet và hiệu năng trong bảng tuỳ chọn"></td>
 </tr>
 </table>
 
@@ -70,7 +70,7 @@ Có bốn nhân vật: Mochi, Mun, Bông và Luffy Gear 5. Pet tự đi dạo tr
 |---|---|
 | Vui | Rê chuột vào pet |
 | Ngủ | Sau 60 giây không thao tác |
-| Nổi giận | Bấm liên tục 5 lần |
+| Nổi giận | Bấm 5 lần trong 4 giây |
 | Diễn trò (chích điện, súng nước, thở oxy, khóc, ngất) | Ngẫu nhiên, hoặc khi bấm vào pet |
 
 <p align="center"><img src="docs/img/pets.jpg" alt="Ba nhân vật pet và các trạng thái của Mochi" width="760"></p>
@@ -100,13 +100,12 @@ Kéo thẻ file trong chat thả thẳng vào Finder hoặc Explorer, thay cho n
 <p align="center"><img src="docs/img/drag-file.gif" alt="Kéo thẻ file trong chat thả vào cửa sổ Finder" width="820"></p>
 
 - Chỉ kéo được file đã có trên máy (thẻ hiện "Đã có trên máy") trong tin do người khác gửi. File do chính bạn gửi chưa kéo được.
-- Đã kiểm chứng trên macOS, Windows chưa thử.
 
 ### OCR trên ảnh
 
-Có thể tắt trong bảng tuỳ chọn, mục "OCR trên ảnh".
+Trình xem ảnh tự nhận dạng chữ khi mở ảnh. Chữ nằm đúng vị trí trên ảnh, bôi đen và sao chép bằng `⌘C` / `Ctrl+C`, hoặc bấm **Sao chép tất cả**. Nút quét chữ trên thanh công cụ (biểu tượng chữ A trong khung ngắm) hoặc phím `T` bật/tắt quét cho ảnh đang xem. Tắt hẳn trong bảng tuỳ chọn, mục "OCR trên ảnh".
 
-Trình xem ảnh tự nhận dạng chữ khi mở ảnh. Chữ được phủ lên đúng vị trí trên ảnh, có thể bôi đen và sao chép bằng `⌘C` / `Ctrl+C`, hoặc bấm **Sao chép tất cả** để lấy toàn bộ. Nút `Aa` trên thanh công cụ (hoặc phím `T`) bật/tắt tính năng này. macOS dùng Vision, Windows dùng `ocr.ps1`, Linux dùng `tesseract`.
+Engine theo hệ điều hành: macOS dùng Vision, Windows dùng `ocr.ps1` (Windows.Media.Ocr), Linux dùng `tesseract`.
 
 <p align="center"><img src="docs/img/ocr.jpg" alt="Bôi đen chữ trực tiếp trên ảnh trong trình xem ảnh" width="820"></p>
 
@@ -153,7 +152,18 @@ Dịch trực tiếp lúc bạn gõ, kiểu Google Translate. Nút dịch nằm 
 
 ### Hiệu năng
 
-Các tuỳ chọn sau áp dụng khi khởi động lại Zalo: giảm RAM (low-end mode), tắt tự cập nhật, giảm tải khi ẩn hoặc thu nhỏ, hoãn nạp cửa sổ thông báo. Lucent cũng luôn tắt bộ đo FPS của Zalo vì nó giữ GPU hoạt động liên tục.
+Các tuỳ chọn này nằm trong bảng tuỳ chọn, lưu ở `~/.zalo-glass/config.json` và chỉ áp dụng sau khi mở lại Zalo (nút **Khởi động lại** ở cuối bảng):
+
+| Tuỳ chọn | Tác dụng |
+|---|---|
+| Giảm RAM | Giới hạn bộ nhớ của renderer và số luồng vẽ. |
+| Tắt tự cập nhật | Zalo không tự kiểm tra bản mới. |
+| Giảm tải khi ẩn / thu nhỏ | Cửa sổ ẩn hoặc thu nhỏ chạy chậm lại. |
+| Hoãn nạp cửa sổ thông báo | Cửa sổ thông báo riêng của Zalo (Windows, Linux) chỉ nạp khi cần, nên thông báo đầu tiên có thể trễ hoặc trống. Không nên bật trên Windows và Linux; macOS dùng thông báo hệ thống nên gần như không ảnh hưởng. |
+| Tắt ZaloCap | Bỏ chụp màn hình của Zalo. Zalo cũng không dán được ảnh hoặc file từ clipboard. |
+| Tắt ZaloCall | Bỏ gọi thoại và video. |
+
+Lucent luôn tắt bộ đo FPS của Zalo vì nó giữ GPU hoạt động liên tục.
 
 ## Cài đặt
 
@@ -196,7 +206,7 @@ powershell -ExecutionPolicy Bypass -File uninstall.ps1
 | Biến | Ý nghĩa |
 |---|---|
 | `ZALO_APP` | Thư mục cài Zalo, nếu không nằm ở vị trí mặc định. |
-| `GLASS_JS` | Danh sách module JS được nạp. Mặc định `"blur album keys ocr pet meet drag translate"`. Bỏ một tên khỏi danh sách để tắt tính năng tương ứng. Module `templates` luôn được nạp trước. |
+| `GLASS_JS` | Danh sách module JS được nạp. Mặc định `"blur album keys ocr pet meet drag translate live"`. Bỏ một tên khỏi danh sách để tắt tính năng tương ứng. Module `templates` luôn được nạp trước. |
 | `GLASS_TRANSPARENT=1` | Cửa sổ trong suốt. Chỉ macOS, thử nghiệm. |
 
 Ví dụ, chỉ cài theme và tính năng che nội dung:
@@ -207,7 +217,7 @@ GLASS_JS="blur" ./install.sh
 
 ## Cách hoạt động
 
-`install.mjs` ghép các file trong [theme/](theme) thành một gói CSS và một gói JS, ghi chúng vào `app.asar`, rồi chèn thẻ `<link>` và `<script>` vào các trang của Zalo. Trên macOS, script cập nhật `Info.plist` và ký lại ứng dụng. CSS ghi đè các biến màu của Zalo, JS thêm các thành phần giao diện (nút con mắt, pet, lớp OCR, …). Phần chạy trong tiến trình chính của Electron (tuỳ chọn hiệu năng, máy chủ OCR cục bộ) được chèn vào đầu `bootstrap.js`.
+`install.mjs` ghép các file trong [theme/](theme) thành một gói CSS và một gói JS, ghi chúng vào `app.asar`, rồi chèn thẻ `<link>` và `<script>` vào các trang của Zalo. Trên macOS, script cập nhật `Info.plist` và ký lại ứng dụng. CSS ghi đè các biến màu của Zalo, JS thêm các thành phần giao diện (nút con mắt, pet, lớp OCR, …). Phần chạy trong tiến trình chính của Electron (tuỳ chọn hiệu năng, helper dịch, máy chủ cục bộ cho OCR, cấu hình và kéo file) được chèn vào đầu `bootstrap.js`. Máy chủ này chỉ nghe ở `127.0.0.1`.
 
 Chi tiết xem [docs/architecture.md](docs/architecture.md).
 
