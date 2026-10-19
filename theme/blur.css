@@ -56,11 +56,11 @@ body.dark #zg-menu .zg-dlg { background: #22262b; }
 #zg-menu section + section { border-top: 1px solid var(--border); }
 #zg-menu .zg-h { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 8px; font-size: 15px; white-space: nowrap; font-weight: 600; }
 #zg-menu .zg-h svg { flex: none; width: 20px; height: 20px; }
-#zg-menu .zg-h select { min-width: 0;
+#zg-menu .zg-h select, #zg-menu .zg-sel { min-width: 0;
   margin-left: auto; padding: 6px 28px 6px 12px; border: 1px solid var(--border); border-radius: 8px; font: inherit; font-size: 14px; font-weight: 400; cursor: pointer;
   color: var(--text-primary); background-color: transparent; outline: 0;
 }
-#zg-menu .zg-h select option { color: #081c36; background: #fff; }
+#zg-menu .zg-h select option, #zg-menu .zg-sel option { color: #081c36; background: #fff; }
 #zg-menu label { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 40px; padding: 0 8px 0 40px; border-radius: 8px; cursor: pointer; font-size: 14px; color: var(--text-primary); }
 #zg-menu label:hover { background: var(--layer-background-hover); }
 /* thẻ chọn theme / pet */
@@ -222,3 +222,6 @@ body.zg-hide-cmsg #chatViewContainer:not(:hover) :is(.chat-group-topic__item, .t
 /* danh sách ghim mở rộng đè lên khung chat: nền kính + blur để không lộ tin phía sau */
 .topic-board-details { background-color: rgba(22, 24, 44, .62) !important; backdrop-filter: blur(24px) saturate(170%); -webkit-backdrop-filter: blur(24px) saturate(170%); }
 body:not(.dark) .topic-board-details { background-color: rgba(255, 255, 255, .72) !important; }
+#zg-menu label.zg-note { display: block; min-height: 0; padding: 0 8px 8px 40px; font-size: 12px; line-height: 1.4; cursor: default; color: var(--text-secondary); }
+#zg-menu label.zg-note:hover { background: none; }
+#zg-menu label.zg-note[hidden] { display: none; }

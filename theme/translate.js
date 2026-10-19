@@ -6,7 +6,7 @@
   const API = "http://127.0.0.1:47831/", ROW = '[id^="bb_msg_id"]';
   const ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h9M8.5 3v2M6 5c0 4 3 7 6 8M12 5c-1 4-4 7-8 8M13 20l4-9 4 9M14.5 17h5"/></svg>';
   // gỡ bản dịch: icon dịch (góc trên-trái) và thùng rác (góc dưới-phải) xéo nhau; stroke bù theo tỉ lệ để nét vẫn 1.8
-  const ICON_OFF = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><g transform="scale(.6)" stroke-width="3"><path d="M4 5h9M8.5 3v2M6 5c0 4 3 7 6 8M12 5c-1 4-4 7-8 8M13 20l4-9 4 9M14.5 17h5"/></g><g transform="translate(12 12) scale(.5)" stroke-width="3.6"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></g></svg>';
+  const ICON_OFF = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><g transform="scale(.68)" stroke-width="2.65"><path d="M4 5h9M8.5 3v2M6 5c0 4 3 7 6 8M12 5c-1 4-4 7-8 8M13 20l4-9 4 9M14.5 17h5"/></g><g transform="translate(10 10) scale(.58)" stroke-width="3.1"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></g></svg>';
   const to = () => document.body?.dataset.zgTr || "";
   let store = {}, loaded = "", row0 = null; // store = bản dịch đã lưu của ngôn ngữ đang dùng; row0 = tin vừa bấm chuột phải
   const hash = (s) => { // cyrb53, đủ để làm khoá (va chạm ≈ 0 với vài chục nghìn tin)
@@ -42,7 +42,7 @@
     if (store[k]) return show(b, store[k]);
     show(b, null);
     try {
-      const r = await (await fetch(`${API}translate?to=${lang}&k=${k}`, { method: "POST", body: text })).json();
+      const r = await (await fetch(`${API}translate?to=${lang}&k=${k}&e=${document.body.dataset.zgTrEngine || ""}`, { method: "POST", body: text })).json();
       if (r.error) throw new Error(r.error);
       if (lang === loaded) store[k] = r.t;
       if (out(b)) show(b, r.t); // người dùng gỡ trong lúc đang dịch thì thôi (kết quả vẫn được lưu)
@@ -81,6 +81,7 @@
     if (copy && lang && bodyOf(row0) && !copy.parentElement.querySelector(".zg-tri")) {
       const n = copy.cloneNode(true), ic = n.querySelector(".menu-icon"), off = !!out(bodyOf(row0));
       n.classList.add("zg-tri"); n.classList.toggle("zg-tri-off", off);
+      if (off) { n.classList.remove("--NORMAL"); n.classList.add("--DANGER"); } // đỏ cả dòng như "Xóa chỉ ở phía tôi"
       const w = document.createTreeWalker(n, NodeFilter.SHOW_TEXT);
       for (let t; (t = w.nextNode()); ) if (t.nodeValue.trim()) { t.nodeValue = off ? "Gỡ bản dịch" : "Dịch tin nhắn"; break; }
       if (ic) { [...ic.classList].filter((c) => /_\d+_Line$/.test(c)).forEach((c) => ic.classList.remove(c)); ic.innerHTML = off ? ICON_OFF : ICON; }

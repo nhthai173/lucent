@@ -32,6 +32,7 @@ Do not work from this file alone for these tasks. The docs contain exact formats
 - No new dependencies. Only `node:` built-ins in `install.mjs` / `asar.mjs`.
 - Never hand-edit Zalo's installed files and never delete `~/.zalo-glass-backup/`; all patching goes through `install.mjs`.
 - `install.sh` kills Zalo. Run it only when that is acceptable.
+- Message content stays on the machine. The only exception is the opt-in Google translate engine (`translate-main.js`; default on Windows/Linux only once the user turns translation on, opt-in on macOS). Do not add any other outbound request carrying chat content.
 - Never rename a stored id (theme key, pet key, `localStorage` key, option key): it resets users' saved choices.
 - Do not claim a UI change works until you have installed it and looked at it (screenshot), in the main window and the image viewer.
 - Colours come from `--zg-*` variables, never hardcoded hues.

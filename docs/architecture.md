@@ -45,7 +45,7 @@ How Lucent gets into Zalo, what runs where, and where state lives. Read this bef
 | `translate.js` (+`translate.css`) | main/popup | Message translation (macOS only): action-row button, context-menu item, stored results in `~/.zalo-glass/translations/` (`/translate`, `/translations` routes in `ocr-main.js`, `translate.swift` helper) |
 | `ocr.js` (+`ocr.css`) | viewer | Live-Text-style OCR overlay on images |
 | `opts-main.js` | main process | Perf options from `~/.zalo-glass/config.json` (RAM flags, no auto-update, throttling, lazy notification window, fake ZaloCap/ZaloCall) |
-| `translate-main.js` | main process | Keeps the `translate` helper (Swift, Apple Translation) running; `globalThis.__zgTr(to, text, cb)`; exits after `trKeep` minutes idle (config.json, default 30) |
+| `translate-main.js` | main process | `globalThis.__zgTr(to, text, cb, engine)`: Apple helper (Swift, macOS, kept warm, exits after `trKeep` minutes idle) or Google (online, opt-in, default on Windows/Linux) |
 | `ocr-main.js` | main process | Local HTTP server (OCR + config) |
 | `vibrancy.js`, `transparent.css` | main process / CSS | macOS experimental transparent window |
 

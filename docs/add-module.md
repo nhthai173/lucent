@@ -72,7 +72,7 @@ The menu is built in `theme/blur.js` from the `GROUPS` array:
 - When the target element is missing, do nothing and stay silent.
 - Always make DOM insertion idempotent (marker class + existence check).
 - Do not intercept or block Zalo's own events (`stopPropagation`, capture handlers) unless the feature needs it, and then only on the elements you own.
-- Never send message content, contact names or file paths anywhere. All servers are localhost.
+- Never send message content, contact names or file paths anywhere. All servers are localhost. Only exception: the opt-in Google translate engine (`translate-main.js`), which the user must enable and which the menu labels as online.
 - Follow `performance.md` for observers, timers and animation.
 
 ## Checklist

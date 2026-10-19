@@ -113,12 +113,16 @@ Trình xem ảnh tự nhận dạng chữ khi mở ảnh. Chữ được phủ l
 
 ### Dịch tin nhắn
 
-Chỉ macOS 26 trở lên (Windows và Linux tạm tắt). Dịch bằng Translation của Apple, chạy hoàn toàn trên máy, không gửi nội dung ra ngoài. Cần tải trước gói ngôn ngữ trong Cài đặt hệ thống > Ngôn ngữ & vùng > Ngôn ngữ dịch.
+Hai công cụ dịch:
 
-- Bật trong bảng tuỳ chọn, mục "Dịch tin nhắn", chọn Tiếng Việt hoặc English.
-- Rê chuột vào tin chữ, bấm nút dịch cùng hàng với Trả lời / Chia sẻ, hoặc chuột phải chọn "Dịch tin nhắn". Bản dịch hiện dưới chữ gốc (tin reply chỉ dịch phần chữ, không dịch phần trích dẫn). Bấm lại để ẩn.
+- **Apple (trên máy)**: macOS 26 trở lên, dùng Translation của Apple, chạy hoàn toàn trên máy, không gửi nội dung ra ngoài. Mặc định trên macOS. Cần tải trước gói ngôn ngữ trong Cài đặt hệ thống > Ngôn ngữ & vùng > Ngôn ngữ dịch.
+- **Google (online)**: chạy trên mọi hệ điều hành và là cách duy nhất trên Windows/Linux. Nội dung tin nhắn được gửi tới Google, nên chỉ dùng khi bạn chủ động bật. Dùng endpoint không chính thức của Google, có thể bị giới hạn tốc độ hoặc ngừng hoạt động.
+
+Tính năng mặc định tắt trên mọi máy: bật trong bảng tuỳ chọn, mục "Dịch tin nhắn", chọn Tiếng Việt hoặc English (Windows/Linux dùng Google ngay khi bật; macOS dùng Apple, đổi sang Google trong mục "Công cụ dịch").
+
+- Rê chuột vào tin chữ, bấm nút dịch cùng hàng với Trả lời / Chia sẻ, hoặc chuột phải chọn "Dịch tin nhắn". Bản dịch hiện dưới chữ gốc (tin reply chỉ dịch phần chữ, không dịch phần trích dẫn) và giữ nguyên xuống dòng. Bấm "Gỡ bản dịch" để ẩn và xoá bản dịch đã lưu.
 - Bản dịch được lưu trong `~/.zalo-glass/translations/` nên mở lại chat vẫn còn. Nút "Xoá" ở mục này xoá toàn bộ lịch sử dịch (có hỏi xác nhận).
-- Helper dịch chạy nền để chỉ nạp model một lần (lần dịch đầu ~3 giây, các lần sau ~0,5 giây, tốn ~20 MB RAM và 0% CPU khi nhàn rỗi). Mặc định giữ 30 phút sau lần dịch cuối rồi tự thoát; chỉnh số phút trong mục "Dịch tin nhắn" của bảng tuỳ chọn (0 = thoát ngay sau mỗi lần, đổi có tác dụng ngay).
+- Trên macOS với công cụ Apple, helper dịch chạy nền để chỉ nạp model một lần (lần dịch đầu ~3 giây, các lần sau ~0,5 giây, ~20 MB RAM và 0% CPU khi nhàn rỗi). Mặc định giữ 30 phút sau lần dịch cuối rồi tự thoát; chỉnh số phút trong bảng tuỳ chọn (0 = thoát ngay sau mỗi lần, đổi có tác dụng ngay).
 - Bản dịch cũng bị che khi bật "Nội dung tin nhắn" trong phần Ẩn trong hội thoại.
 
 ### Album, phím tắt

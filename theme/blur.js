@@ -2,7 +2,7 @@
 // Nhóm 1: danh sách hội thoại (msg/name/avatar). Nhóm 2: trong khung chat (cmsg/cimg/cname). Nhóm 3: cửa sổ xem ảnh (view).
 (() => {
   const ICON = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
-  const KEY = "zg-hide", VIEWER = location.pathname.endsWith("popup-viewer.html");
+  const MACOS = /Mac/.test(navigator.platform), KEY = "zg-hide", VIEWER = location.pathname.endsWith("popup-viewer.html");
   // icon nét mảnh 24px như menu Cài đặt của Zalo
   const I = {
     list: ICON('<path d="M4 6h16M4 12h16M4 18h10"/>'),
@@ -19,7 +19,7 @@
     ["Ẩn trong hội thoại", I.chat, [["cmsg", "Nội dung tin nhắn"], ["cimg", "Ảnh / album"], ["cname", "Tên & avatar"]]],
     ["Ẩn khi xem ảnh", I.img, [["view", "Ảnh, thumbnail, người gửi"]]],
     ["Hiển thị ảnh trong hội thoại", I.album, "album"], // select: Mặc định (dạng gốc của Zalo) | Cuộn ngang
-    ...(/Mac/.test(navigator.platform) ? [["Dịch tin nhắn (Apple, chạy local)", I.tr, "tr"]] : []), // ponytail: engine mới có cho macOS; Windows/Linux ẩn mục này
+    ["Dịch tin nhắn", I.tr, "tr"], // macOS: Apple local (mặc định) hoặc Google; Windows/Linux: chỉ Google, mặc định tắt
     ["OCR trên ảnh", I.img, [["ocr", "Quét chữ khi xem ảnh"]]], // mặc định bật; ocr.js (viewer) đọc class zg-ocr-off
     ["Giao diện", I.theme, "@theme"], // select template theme / pet (templates.js)
     ["Pet", I.pet, [["pet", "Hiện pet"], ["petbig", "Phóng to pet khi đang che"]]], // Hiện pet mặc định bật, Phóng to mặc định tắt; pet.js đọc class zg-pet-off / zg-pet-big
@@ -37,6 +37,7 @@
     OPTS.forEach(([k]) => !PET.includes(k) && document.body.classList.toggle("zg-hide-" + k, !!st[k] && (k !== "view" || VIEWER)));
     document.body.classList.toggle("zg-album", !!st.album); // mặc định tắt
     document.body.dataset.zgTr = st.tr || ""; // translate.js đọc ngôn ngữ đích ("" = tắt)
+    document.body.dataset.zgTrEngine = MACOS ? st.trEngine || "" : "google"; // "" = Apple local (chỉ macOS)
     document.body.classList.toggle("zg-pet-big", isOn("petbig"));
     document.body.classList.toggle("zg-pet-off", !isOn("pet"));
     document.body.classList.toggle("zg-ocr-off", !isOn("ocr"));
@@ -116,6 +117,18 @@
             try { await fetch(API.replace("/config", "/translations/clear"), { method: "POST" }); dispatchEvent(new Event("zg-tr-clear")); } catch {}
           };
           sec.append(l);
+          const eng = document.createElement("label"), note = document.createElement("label"); // công cụ dịch + cảnh báo quyền riêng tư khi dùng Google
+          note.className = "zg-note"; note.textContent = "Google Translate: nội dung tin nhắn được gửi tới Google (không còn offline). Endpoint không chính thức, có thể bị giới hạn.";
+          const showNote = () => (note.hidden = !(!MACOS || st.trEngine === "google"));
+          if (MACOS) {
+            eng.innerHTML = '<span>Công cụ dịch</span><select class="zg-sel"><option value="">Apple (trên máy)</option><option value="google">Google (online)</option></select>';
+            eng.lastChild.value = st.trEngine || "";
+            eng.lastChild.onchange = () => { st.trEngine = eng.lastChild.value; try { localStorage.setItem(KEY, JSON.stringify(st)); } catch {} render(); showNote(); };
+            sec.append(eng);
+          }
+          showNote(); sec.append(note);
+        }
+        if (opts === "tr" && MACOS) {
           const k = document.createElement("label"); // thời gian giữ helper dịch chạy nền (translate-main.js): nạp model một lần cho các lần dịch sau, tốn ~15 MB RAM khi đang giữ
           k.innerHTML = '<span>Giữ helper dịch trong bộ nhớ (phút)</span><input type="number" min="0" max="1440" step="5" class="zg-num">';
           k.title = "0 = tắt hẳn sau mỗi lần dịch (mỗi lần dịch chậm hơn ~2 giây vì phải nạp lại model). Đổi có tác dụng ngay.";

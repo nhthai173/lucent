@@ -12,4 +12,5 @@ body[data-zg-tr=""] .zg-trb, body[data-zg-tr=""] .zg-tri { display: none !import
 @keyframes zg-tr-dot { 0%, 80%, 100% { opacity: .25; transform: scale(.7); } 40% { opacity: 1; transform: scale(1.15); } }
 @media (prefers-reduced-motion: reduce) { .zg-tr-load i { animation: none; } }
 /* "Gỡ bản dịch": icon đỏ như các thao tác huỷ của Zalo */
-.zg-trb[data-o="true"] .zg-trb-i, .zg-tri-off .menu-icon { color: #f2555a; }
+.zg-trb[data-o="true"] .zg-trb-i, .zg-tri-off, .zg-tri-off * { color: #f2555a !important; }
+.zg-tri .menu-icon svg { width: 24px; height: 24px; }

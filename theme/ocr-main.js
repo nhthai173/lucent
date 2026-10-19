@@ -67,9 +67,8 @@ try {
         for (const l of ["vi", "en"]) try { fs.unlinkSync(path.join(TR, l + ".json")); } catch {}
         return done("{}");
       }
-      if (u.pathname === "/translate") { // dịch local bằng Apple Translation (chỉ macOS 26+); POST text thuần, ?to=vi|en&k=<khoá lưu>
+      if (u.pathname === "/translate") { // dịch local bằng Apple Translation (macOS 26+) hoặc Google (e=google, mặc định ở Windows/Linux); POST text thuần, ?to=vi|en&k=<khoá lưu>[&e=google]
         if (req.method !== "POST") return fail(405, "POST only");
-        if (!MAC) return fail(501, "dịch chưa hỗ trợ trên " + process.platform);
         const to = u.searchParams.get("to"), k = u.searchParams.get("k") || "";
         if (!["vi", "en"].includes(to) || !/^[0-9a-f]{1,16}$/.test(k)) return fail(400, "bad request");
         if (!globalThis.__zgTr) return fail(501, "chưa có helper dịch");
@@ -82,7 +81,7 @@ try {
             fs.mkdirSync(TR, { recursive: true }); let m = {}; try { m = JSON.parse(fs.readFileSync(f, "utf8")); } catch {} m[k] = r.t; fs.writeFileSync(f, JSON.stringify(m));
           } catch {}
           done(JSON.stringify({ t: r.t }));
-        }));
+        }, u.searchParams.get("e")));
         return;
       }
       if (u.pathname !== "/ocr") return fail(404, "not found");
