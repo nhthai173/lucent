@@ -14,7 +14,7 @@ Giao diện kính mờ (glassmorphism) cho Zalo PC trên macOS, Windows và Linu
 
 ## Giới thiệu
 
-Lucent thay giao diện mặc định của Zalo PC bằng nền kính mờ, có bốn theme và hai chế độ sáng/tối. Ngoài giao diện, Lucent bổ sung một số tiện ích còn thiếu trong Zalo: che nội dung khi cần, chọn chữ trên ảnh (OCR), xem album theo dải ngang, phím tắt và giảm mức dùng tài nguyên.
+Lucent thay giao diện mặc định của Zalo PC bằng nền kính mờ, có bốn theme và hai chế độ sáng/tối. Ngoài giao diện, Lucent bổ sung một số tiện ích còn thiếu trong Zalo: che nội dung khi cần, chọn chữ trên ảnh (OCR), dịch tin nhắn, kéo file ra ngoài, xem album theo dải ngang, phím tắt và giảm mức dùng tài nguyên.
 
 Lucent không cần cài thêm phần mềm nào và không có phụ thuộc. Trình cài đặt chèn CSS/JS vào `app.asar` của Zalo, giống cách ZaDark làm, đồng thời sao lưu bản gốc để khôi phục khi cần.
 
@@ -23,11 +23,13 @@ Lucent không cần cài thêm phần mềm nào và không có phụ thuộc. T
 - **Theme:** Glass (tím), Đại dương, Hoàng hôn, Rừng. Mỗi theme có bản sáng và tối, đổi ngay không cần khởi động lại.
 - **Che nội dung:** ẩn tin nhắn, tên, ảnh đại diện, ảnh và album theo từng nhóm.
 - **OCR trên ảnh:** chọn và sao chép chữ trong trình xem ảnh.
+- **Dịch tin nhắn:** dịch tin nhận và tin đang soạn ngay trong Zalo. Chạy trên máy với macOS, hoặc qua Google.
+- **Kéo file ra ngoài:** kéo thẻ file trong chat thả thẳng vào Finder hoặc Explorer.
 - **Album cuộn ngang:** hiển thị ảnh gửi theo nhóm thành một dải ngang.
 - **Tạo cuộc họp Google Meet** từ menu của thanh công cụ chat.
 - **Phím tắt** để chuyển hội thoại và thao tác với tin nhắn bằng bàn phím.
 - **Tuỳ chọn hiệu năng:** giảm RAM, tắt tự cập nhật, giảm tải khi cửa sổ bị ẩn.
-- **Pet:** ba nhân vật nhỏ ở góc màn hình, có nhiều trạng thái, có thể tắt.
+- **Pet:** bốn nhân vật nhỏ ở góc màn hình, có nhiều trạng thái, có thể tắt.
 
 ### Theme
 
@@ -62,7 +64,7 @@ Nút con mắt ở thanh bên mở bảng tuỳ chọn gồm phần che nội du
 
 ### Pet
 
-Có ba nhân vật: Mochi, Mun và Bông. Pet tự đi dạo trong vùng chat, nói vài câu ngẫu nhiên và đổi trạng thái theo cách bạn tương tác:
+Có bốn nhân vật: Mochi, Mun, Bông và Luffy Gear 5. Pet tự đi dạo trong vùng chat, nói vài câu ngẫu nhiên và đổi trạng thái theo cách bạn tương tác:
 
 | Trạng thái | Khi nào |
 |---|---|
@@ -77,21 +79,13 @@ Pet có thể tắt trong bảng tuỳ chọn. Thêm pet mới: [docs/add-pet.md
 
 #### Luffy Gear 5
 
-Pet **Luffy Gear 5** là fan art SVG chibi với tóc trắng xoăn, vòng mây quanh vai, đai tím và dép. Chọn nút con mắt → "Pet" → "Luffy Gear 5"; pet có lời thoại tiếng Việt riêng và dùng các hành vi đi bộ, nhảy, vui, ngủ, khóc và hết pin có sẵn. Nếu đã cài Lucent, chạy lại script cài đặt từ bản mã nguồn có pet này rồi mở lại Zalo để thấy lựa chọn mới.
+Pet thứ tư, vẽ lại dạng chibi bằng SVG, có lời thoại tiếng Việt riêng. Chọn ở nút con mắt → "Pet" → "Luffy Gear 5".
 
-Luffy **tự đổi ngẫu nhiên sang một Gear khác mỗi 10 giây**, không cần giữ Shift: dạng thường (gọi Gear 1 cho tiện, mũ rơm và áo đỏ), Gear 2 (da ửng hồng, hơi nước), Gear 3 (tay khổng lồ), Gear 4 Boundman (thân bơm hơi, tóc dựng, Haki đen viền đỏ) hoặc Gear 5 (tóc trắng, vòng mây). Nếu đến hạn khi cửa sổ không có focus, pet bị ẩn, đang ngủ hoặc bận tung chiêu thì chờ tới khi hoạt động lại rồi đổi một lần; lượt tiếp theo tính sau đó 10 giây. Dạng Gear chỉ giữ trong phiên hiện tại; đổi pet rồi chọn lại hoặc mở lại Zalo sẽ về Gear 5, không đổi khoá lưu lựa chọn pet.
+- **Đổi Gear:** khi Zalo đang được dùng, cứ 10 giây pet tự đổi giữa dạng thường (Gear 1), Gear 2, Gear 3, Gear 4 (Boundman) và Gear 5. `Shift` + click để đổi ngay. Dạng Gear chỉ giữ trong phiên, mở lại Zalo sẽ về Gear 5.
+- **Tung chiêu:** click vào pet để tung chiêu theo Gear hiện tại (Pistol, Jet Gatling, Gigant Pistol, Kong Gun hoặc đòn Gear 5). Mỗi chiêu kéo dài khoảng 2 giây, kèm một câu thoại.
+- Đi bộ, nhảy, ngủ và thoại dùng chung cơ chế với các pet khác. Pet tôn trọng tuỳ chọn giảm chuyển động của hệ điều hành, và đứng yên thì không chạy animation.
 
-**Click thường vào Luffy để tung chiêu theo Gear hiện tại**: Pistol, Jet Gatling, Gigant Pistol, Kong Gun hoặc đòn cao su tự do Gear 5. Click sẽ thay thế gag khóc/hết pin đang diễn bằng chiêu; click dồn khi đang tung chiêu không khởi động lại hay chồng lượt. Chiêu kéo dài khoảng 2 giây, kèm lời thoại rồi trở lại bình thường. Luffy cũng có thể tự diễn gag khi rảnh; các pet khác giữ phản ứng click gốc.
-
-**Shift + click Luffy** để đổi ngay sang một Gear khác ngẫu nhiên, kể cả khi đang tung chiêu. Mỗi lần đổi chủ động cũng bắt đầu lại mốc tự đổi 10 giây.
-
-Đi bộ, nhảy, ngủ và lời thoại giữ cơ chế pet gốc: nghỉ 6–18 giây rồi chọn đi tới một vị trí ngẫu nhiên trong vùng (45%), nhảy (10%), diễn gag (25%) hoặc đứng yên (20%). Pet chỉ bắt đầu hành vi khi cửa sổ Zalo đang được dùng, không ngủ, không bận và không nói. Ngoài click, pet vẫn có thoại chào, thoại khi gõ, lúc ngủ/thức và 50% cơ hội nói mỗi 90 giây như bản gốc. **Đổi Gear không tự bật thoại và không ngắt bước đi.**
-
-Tuỳ chọn giảm chuyển động của hệ điều hành tắt nhún và vung chiêu. Không có animation mới chạy khi đứng yên. Cài lại Lucent rồi mở lại Zalo để nạp bản mới.
-
-Các dáng được vẽ lại thành SVG chibi, tham khảo [tư liệu Gear 4 trên ONE PIECE.com](https://one-piece.com/usop/o20160127_0511/index.html) và [mô hình Gear 5 của Bandai](https://gashapon.jp/products/detail.html?jan_code=4570118247285000); không tải ảnh hay gọi mạng khi pet chạy.
-
-Các màn tung chiêu là bản diễn hoạt chibi tham khảo [Jet Gatling của Bandai](https://www.bandai.co.jp/candy/products/2010/625830.html), [Gigant Pistol](https://one-piece.com/anime/555/index.html) và [Kong Gun](https://one-piece.com/figure/o4617/index.html); đòn cao su Gear 5 là gag sáng tạo cho pet.
+Hình vẽ tham khảo tư liệu [Gear 4 trên ONE PIECE.com](https://one-piece.com/usop/o20160127_0511/index.html) và [mô hình Gear 5 của Bandai](https://gashapon.jp/products/detail.html?jan_code=4570118247285000). Các chiêu tham khảo [Jet Gatling](https://www.bandai.co.jp/candy/products/2010/625830.html), [Gigant Pistol](https://one-piece.com/anime/555/index.html) và [Kong Gun](https://one-piece.com/figure/o4617/index.html); đòn Gear 5 là phần sáng tạo thêm. Pet không tải ảnh hay gọi mạng khi chạy.
 
 ### Google Meet
 
@@ -101,7 +95,12 @@ Menu `…` trên thanh công cụ chat có thêm mục **Tạo cuộc họp Goog
 
 ### Kéo file ra thư mục
 
-Kéo thẻ file trong chat thả thẳng vào Finder / Explorer, thay cho nút **Lưu về máy** rồi chọn thư mục. Chỉ kéo được file đã có trên máy (hiện chữ "Đã có trên máy"). Tên file giữ nguyên như trong chat. Đã kiểm chứng trên macOS; Windows chưa thử.
+Kéo thẻ file trong chat thả thẳng vào Finder hoặc Explorer, thay cho nút **Lưu về máy** rồi chọn thư mục. Tên file giữ nguyên như trong chat.
+
+<p align="center"><img src="docs/img/drag-file.gif" alt="Kéo thẻ file trong chat thả vào cửa sổ Finder" width="820"></p>
+
+- Chỉ kéo được file đã có trên máy (thẻ hiện "Đã có trên máy") trong tin do người khác gửi. File do chính bạn gửi chưa kéo được.
+- Đã kiểm chứng trên macOS, Windows chưa thử.
 
 ### OCR trên ảnh
 
@@ -113,21 +112,36 @@ Trình xem ảnh tự nhận dạng chữ khi mở ảnh. Chữ được phủ l
 
 ### Dịch tin nhắn
 
+Dịch tin nhắn ngay trong Zalo, bản dịch hiện dưới chữ gốc. Mặc định tắt; bật ở nút con mắt → "Dịch tin nhắn", chọn Tiếng Việt hoặc English.
+
+<p align="center"><img src="docs/img/translate.jpg" alt="Bản dịch hiện dưới tin nhắn, nút dịch cạnh nút Trả lời và Chia sẻ" width="640"></p>
+
+- Rê chuột vào tin chữ rồi bấm nút dịch cùng hàng với Trả lời / Chia sẻ, hoặc chuột phải chọn "Dịch tin nhắn". Bấm "Gỡ bản dịch" để ẩn và xoá bản dịch đã lưu.
+- Tin reply chỉ dịch phần chữ, không dịch phần trích dẫn. Xuống dòng được giữ nguyên.
+- Bản dịch được lưu trong `~/.zalo-glass/translations/` nên mở lại chat vẫn còn. Nút "Xoá" ở mục này xoá toàn bộ lịch sử dịch (có hỏi xác nhận).
+- Bản dịch bị che cùng với "Nội dung tin nhắn" trong phần Ẩn trong hội thoại.
+
 Hai công cụ dịch:
 
-- **Apple (trên máy)**: macOS 26 trở lên, dùng Translation của Apple, chạy hoàn toàn trên máy, không gửi nội dung ra ngoài. Mặc định trên macOS. Cần tải trước gói ngôn ngữ trong Cài đặt hệ thống > Ngôn ngữ & vùng > Ngôn ngữ dịch.
-- **Google (online)**: chạy trên mọi hệ điều hành và là cách duy nhất trên Windows/Linux. Nội dung tin nhắn được gửi tới Google, nên chỉ dùng khi bạn chủ động bật. Dùng endpoint không chính thức của Google, có thể bị giới hạn tốc độ hoặc ngừng hoạt động.
+| Công cụ | Chạy ở đâu | Ghi chú |
+|---|---|---|
+| Apple (trên máy) | macOS 26 trở lên | Không gửi nội dung ra ngoài. Mặc định trên macOS. Cần tải trước gói ngôn ngữ trong Cài đặt hệ thống > Ngôn ngữ & vùng > Ngôn ngữ dịch. |
+| Google (online) | Mọi hệ điều hành | Cách duy nhất trên Windows và Linux. Nội dung tin nhắn được gửi tới Google nên chỉ dùng khi bạn chủ động bật. Dùng endpoint không chính thức, có thể bị giới hạn tốc độ hoặc ngừng hoạt động. |
 
-Tính năng mặc định tắt trên mọi máy: bật trong bảng tuỳ chọn, mục "Dịch tin nhắn", chọn Tiếng Việt hoặc English (Windows/Linux dùng Google ngay khi bật; macOS dùng Apple, đổi sang Google trong mục "Công cụ dịch").
+Trên Windows và Linux, công cụ là Google ngay khi bật dịch. Trên macOS đổi sang Google ở mục "Công cụ dịch".
 
-- Rê chuột vào tin chữ, bấm nút dịch cùng hàng với Trả lời / Chia sẻ, hoặc chuột phải chọn "Dịch tin nhắn". Bản dịch hiện dưới chữ gốc (tin reply chỉ dịch phần chữ, không dịch phần trích dẫn) và giữ nguyên xuống dòng. Bấm "Gỡ bản dịch" để ẩn và xoá bản dịch đã lưu.
-- Bản dịch được lưu trong `~/.zalo-glass/translations/` nên mở lại chat vẫn còn. Nút "Xoá" ở mục này xoá toàn bộ lịch sử dịch (có hỏi xác nhận).
-- Trên macOS với công cụ Apple, helper dịch chạy nền để chỉ nạp model một lần (lần dịch đầu ~3 giây, các lần sau ~0,5 giây, ~20 MB RAM và 0% CPU khi nhàn rỗi). Mặc định giữ 30 phút sau lần dịch cuối rồi tự thoát; chỉnh số phút trong bảng tuỳ chọn (0 = thoát ngay sau mỗi lần, đổi có tác dụng ngay).
-- Bản dịch cũng bị che khi bật "Nội dung tin nhắn" trong phần Ẩn trong hội thoại.
+Với công cụ Apple, một tiến trình nền giữ model đã nạp nên lần dịch đầu mất khoảng 3 giây, các lần sau khoảng 0,5 giây. Tiến trình này dùng khoảng 20 MB RAM và gần như không tốn CPU khi nhàn rỗi. Mặc định nó tự thoát sau 30 phút không dịch; chỉnh số phút trong bảng tuỳ chọn (0 là thoát ngay sau mỗi lần).
 
-### Dịch khi soạn tin (live translate)
+### Dịch khi soạn tin
 
-Nút dịch nằm ngay sau nút định dạng chữ (Aa) trên thanh công cụ của ô soạn, hiện khi đã bật "Dịch tin nhắn". Bấm để mở khung dịch dưới ô soạn, kiểu Google Translate: ô soạn của Zalo giữ nguyên là ngôn ngữ gốc, bản dịch cập nhật trực tiếp bên dưới khi bạn gõ (chờ ~0,5 giây sau lần gõ cuối), nằm trong ô soạn cùng nền với ô nhập và bị che như tin nhắn khi bật chế độ che nội dung. Chọn ngôn ngữ đích ở ô chọn, nút ⇄ đảo giữa Tiếng Việt và English (ngôn ngữ gốc tự nhận). @mention và emoji không đi qua bản dịch mà được ghép lại nguyên vẹn. Bấm "Dùng bản dịch" để thay nội dung ô soạn bằng bản dịch rồi gửi như thường (Enter). Bản nháp không được lưu vào lịch sử dịch. Tin nhiều dòng được dịch và đặt lại từng dòng. Nếu bản dịch đổi thứ tự mention hoặc emoji thì nội dung được dán gộp thành một dòng và mention thành chữ thường.
+Dịch trực tiếp lúc bạn gõ, kiểu Google Translate. Nút dịch nằm ngay sau nút định dạng chữ (Aa) trên thanh công cụ của ô soạn, hiện khi đã bật "Dịch tin nhắn". Ô soạn của Zalo vẫn là ngôn ngữ gốc, bản dịch cập nhật ngay bên dưới.
+
+<p align="center"><img src="docs/img/live-translate.jpg" alt="Khung dịch trực tiếp bên dưới ô soạn tin" width="640"></p>
+
+- Bản dịch cập nhật khoảng 0,5 giây sau lần gõ cuối. Ngôn ngữ gốc tự nhận, ngôn ngữ đích chọn ở ô chọn, nút ⇄ đảo giữa Tiếng Việt và English.
+- @mention và emoji không đi qua bản dịch mà được ghép lại nguyên vẹn.
+- Bấm "Dùng bản dịch" để thay nội dung ô soạn bằng bản dịch, rồi gửi như thường bằng Enter. Tin nhiều dòng được dịch và đặt lại từng dòng. Nếu bản dịch đổi thứ tự mention hoặc emoji thì nội dung được dán gộp thành một dòng và mention thành chữ thường.
+- Bản nháp không được lưu vào lịch sử dịch. Nội dung đang soạn và bản dịch đều bị che như tin nhắn khi bật chế độ che nội dung.
 
 ### Album, phím tắt
 
