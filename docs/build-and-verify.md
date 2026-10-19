@@ -33,7 +33,7 @@ Environment variables:
 | Var | Meaning |
 |---|---|
 | `ZALO_APP` | Zalo install dir (macOS: the `.app`; Windows/Linux: the dir containing `resources/app.asar`) |
-| `GLASS_JS` | Space-separated JS modules to load, default `"blur album keys ocr pet meet"`. `templates` is always prepended automatically; do not list it |
+| `GLASS_JS` | Space-separated JS modules to load, default `"blur album keys ocr pet meet drag"`. `templates` is always prepended automatically; do not list it |
 | `GLASS_TRANSPARENT=1` | macOS only, experimental window transparency (`transparent.css`, `vibrancy.js`) |
 
 Platform status: verified on macOS and Windows. Linux paths are unverified guesses.

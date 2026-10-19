@@ -44,6 +44,12 @@ try {
         done("{}"); const { app } = require("electron"); setTimeout(() => { app.relaunch(); app.exit(0); }, 200);
         return;
       }
+      if (u.pathname === "/drag") { // kéo file ra ngoài (drag-main.js); không nhận đường dẫn từ request, chỉ tên file
+        const D = globalThis.__zgDrag;
+        if (!D) return fail(501, "no drag");
+        if (u.searchParams.get("m") === "arm") { D.arm(); return done("{}"); }
+        return D.start(path.basename(u.searchParams.get("n") || ""), (ok) => (ok ? done("{}") : fail(404, "no file")));
+      }
       if (u.pathname !== "/ocr") return fail(404, "not found");
       if (!engine) return fail(501, "OCR chưa hỗ trợ trên " + process.platform);
       let raw = u.searchParams.get("p") || "";

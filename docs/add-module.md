@@ -33,7 +33,7 @@ A module is a self-contained renderer script (and optional CSS, optional main-pr
    - The script is injected with `defer`, but `document.body` can still be unavailable in the viewer; the guard above handles both.
    - Zalo is a React app that re-renders DOM freely: anything you insert can be deleted. Insert with a marker class (e.g. `zg-meet`) and re-check on every scan (see `meet.js`). Prefer not touching React-owned nodes at all (the pet is a separate fixed layer on `<html>` for this reason).
    - Do not leak globals. Share data only via `__zg` (from `templates.js`).
-2. **Register the JS** in `install.mjs`: the default list is in the string `process.env.GLASS_JS || "blur album keys ocr pet meet"`. Add `<name>`. Order = execution order (all modules are concatenated; `templates` is prepended automatically). Also update the same default in the header comment of `install.mjs` and in the env table of `README.md`.
+2. **Register the JS** in `install.mjs`: the default list is in the string `process.env.GLASS_JS || "blur album keys ocr pet meet drag"`. Add `<name>`. Order = execution order (all modules are concatenated; `templates` is prepended automatically). Also update the same default in the header comment of `install.mjs` and in the env table of `README.md`.
 3. **Register the CSS** (if any) in `install.mjs`: the array `["glass-light", "blur", "album", "ocr", "pet"]` inside the `css` constant. Add `<name>` in the position where it should win cascade order (later wins at equal specificity). Dark-only token files would instead go through `dark("…css")` (only lines starting with `body {` are rewritten).
 4. **Syntax check and install** (see `build-and-verify.md`), then verify in both the main window and the image viewer.
 

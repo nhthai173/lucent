@@ -99,6 +99,10 @@ Menu `…` trên thanh công cụ chat có thêm mục **Tạo cuộc họp Goog
 
 <p align="center"><img src="docs/img/meet.jpg" alt="Mục Tạo cuộc họp Google Meet trong menu" width="640"></p>
 
+### Kéo file ra thư mục
+
+Kéo thẻ file trong chat thả thẳng vào Finder / Explorer, thay cho nút **Lưu về máy** rồi chọn thư mục. Chỉ kéo được file đã có trên máy (hiện chữ "Đã có trên máy"). Tên file giữ nguyên như trong chat. Đã kiểm chứng trên macOS; Windows chưa thử.
+
 ### OCR trên ảnh
 
 Trình xem ảnh tự nhận dạng chữ khi mở ảnh. Chữ được phủ lên đúng vị trí trên ảnh, có thể bôi đen và sao chép bằng `⌘C` / `Ctrl+C`, hoặc bấm **Sao chép tất cả** để lấy toàn bộ. Nút `Aa` trên thanh công cụ (hoặc phím `T`) bật/tắt tính năng này. macOS dùng Vision, Windows dùng `ocr.ps1`, Linux dùng `tesseract`.
@@ -158,7 +162,7 @@ powershell -ExecutionPolicy Bypass -File uninstall.ps1
 | Biến | Ý nghĩa |
 |---|---|
 | `ZALO_APP` | Thư mục cài Zalo, nếu không nằm ở vị trí mặc định. |
-| `GLASS_JS` | Danh sách module JS được nạp. Mặc định `"blur album keys ocr pet meet"`. Bỏ một tên khỏi danh sách để tắt tính năng tương ứng. Module `templates` luôn được nạp trước. |
+| `GLASS_JS` | Danh sách module JS được nạp. Mặc định `"blur album keys ocr pet meet drag"`. Bỏ một tên khỏi danh sách để tắt tính năng tương ứng. Module `templates` luôn được nạp trước. |
 | `GLASS_TRANSPARENT=1` | Cửa sổ trong suốt. Chỉ macOS, thử nghiệm. |
 
 Ví dụ, chỉ cài theme và tính năng che nội dung:
