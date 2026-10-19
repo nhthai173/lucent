@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Cài / gỡ theme Glass cho Zalo PC (macOS, Windows, Linux) theo cách ZaDark: chèn CSS+JS vào pc-dist/index.html trong app.asar.
 //   ./install.sh | install.ps1 [--uninstall]   Chạy lại sau mỗi lần Zalo tự cập nhật. Không cần Node: nếu máy không có thì chạy bằng Electron của Zalo.
-// Env: ZALO_APP (thư mục cài Zalo), GLASS_JS ("blur album keys ocr pet meet drag"), GLASS_TRANSPARENT=1 (chỉ macOS, thử nghiệm).
+// Env: ZALO_APP (thư mục cài Zalo), GLASS_JS ("blur album keys ocr pet meet drag translate"), GLASS_TRANSPARENT=1 (chỉ macOS, thử nghiệm).
 import { spawnSync, execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -76,22 +76,26 @@ if (!fs.existsSync(path.join(BACKUP, "app.asar")) || !patched(ASAR)) {
 
 // token dark chỉ áp khi Zalo ở dark mode (body.dark); light mode dùng glass-light.css
 const dark = (f) => read(f).replace(/^body \{/gm, "body.dark {");
-const css = [dark("dark-base.css"), dark("glass.css"), ...["glass-light", "blur", "album", "ocr", "pet"].map((n) => read(n + ".css")), process.env.GLASS_TRANSPARENT === "1" && MAC ? read("transparent.css") : ""].join("\n");
-const js = ["templates", ...(process.env.GLASS_JS || "blur album keys ocr pet meet drag").split(/\s+/)].map((j) => read(j + ".js")).join("\n");
+// tách 2 file: theme (đổi màu Zalo, templates.js tắt được để về giao diện Zalo gốc) và tính năng (menu, pet, OCR, dịch…, luôn bật)
+const themeCss = [dark("dark-base.css"), dark("glass.css"), read("glass-light.css"), process.env.GLASS_TRANSPARENT === "1" && MAC ? read("transparent.css") : ""].join("\n");
+const css = ["blur", "album", "ocr", "pet", "translate"].map((n) => read(n + ".css")).join("\n");
+const js = ["templates", ...(process.env.GLASS_JS || "blur album keys ocr pet meet drag translate").split(/\s+/)].map((j) => read(j + ".js")).join("\n");
 // connect-src thêm 127.0.0.1:47831 cho OCR (ocr-main.js)
-const inject = (b) => b && b.toString().replace("</head>", '<link rel="stylesheet" href="zalo-glass.css"><script src="zalo-glass.js" defer></script></head>').replace("connect-src 'self'", "connect-src 'self' http://127.0.0.1:47831");
+const inject = (b) => b && b.toString().replace("</head>", '<link rel="stylesheet" href="zalo-glass-theme.css"><link rel="stylesheet" href="zalo-glass.css"><script src="zalo-glass.js" defer></script></head>').replace("connect-src 'self'", "connect-src 'self' http://127.0.0.1:47831");
 
 // OCR: mỗi OS một engine native, server localhost ở main process (ocr-main.js)
 fs.mkdirSync(STATE, { recursive: true });
 if (MAC) {
   const bin = path.join(STATE, "ocr"), swift = path.join(T, "ocr.swift");
   if (!fs.existsSync(bin) || fs.statSync(swift).mtimeMs > fs.statSync(bin).mtimeMs) if (run("swiftc", ["-O", swift, "-o", bin]).status) console.error("Không biên dịch được ocr.swift (cần Xcode Command Line Tools) — bỏ qua OCR");
+  const tbin = path.join(STATE, "translate"), tswift = path.join(T, "translate.swift"); // dịch local (translate.swift), cần macOS 26+
+  if (!fs.existsSync(tbin) || fs.statSync(tswift).mtimeMs > fs.statSync(tbin).mtimeMs) if (run("swiftc", ["-O", tswift, "-o", tbin]).status) console.error("Không biên dịch được translate.swift — bỏ qua dịch tin nhắn");
 } else if (WIN) fs.copyFileSync(path.join(T, "ocr.ps1"), path.join(STATE, "ocr.ps1"));
 else if (spawnSync("tesseract", ["--version"], { stdio: "ignore" }).status !== 0) console.error("Chưa có tesseract — OCR sẽ báo không khả dụng (cài tesseract + tesseract-ocr-vie)");
 
 // cửa sổ trong suốt (thử nghiệm, chỉ macOS, mặc định tắt): GLASS_TRANSPARENT=1
-const pre = read("opts-main.js") + "\n" + read("ocr-main.js") + "\n" + read("drag-main.js") + "\n" + (MAC && process.env.GLASS_TRANSPARENT === "1" ? read("vibrancy.js") + "\n" : "");
-const edits = { "pc-dist/zalo-glass.css": () => css, "pc-dist/zalo-glass.js": () => js, "bootstrap.js": (b) => pre + b, "pc-dist/index.html": inject };
+const pre = read("opts-main.js") + "\n" + read("translate-main.js") + "\n" + read("ocr-main.js") + "\n" + read("drag-main.js") + "\n" + (MAC && process.env.GLASS_TRANSPARENT === "1" ? read("vibrancy.js") + "\n" : "");
+const edits = { "pc-dist/zalo-glass-theme.css": () => themeCss, "pc-dist/zalo-glass.css": () => css, "pc-dist/zalo-glass.js": () => js, "bootstrap.js": (b) => pre + b, "pc-dist/index.html": inject };
 // Zalo có sẵn FPS monitor (chunk lazy) chạy 2 vòng requestAnimationFrame ~100 lần/giây khi cờ enable_fps_monitor bật → compositor/GPU không bao giờ ngủ. Đổi tên cờ để nó luôn tắt.
 // Lỗi của Zalo: className thanh nav ghép `(showChat?" show-chat":"")+(update?"show-update-btn":"")` thiếu dấu cách → khi có nút cập nhật, "show-chat" thành "show-chatshow-update-btn" và ở chế độ hẹp bấm hội thoại không mở được chat. Thêm dấu cách + thêm showChat vào deps của useMemo.
 const navFix = (t) => t.replace(/\(([a-z])\?"show-update-btn":""\)\+\(([a-z])\?"show-update-btn":""\)\}\),\[([a-z])\.compactLv,/g, '($1?" show-update-btn":"")+($2?" show-update-btn":"")}),[$3.showChat,$3.compactLv,');

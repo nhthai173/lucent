@@ -31,7 +31,7 @@ Lucent không cần cài thêm phần mềm nào và không có phụ thuộc. T
 
 ### Theme
 
-Chọn theme bằng nút con mắt ở thanh bên. Màu sắc của mọi theme đều đi qua các biến `--zg-*`, nên thêm theme mới chỉ cần khai báo một bảng màu (xem [docs/add-theme.md](docs/add-theme.md)).
+Chọn theme bằng nút con mắt ở thanh bên. Chọn "Zalo mặc định" để tắt hẳn lớp phủ kính và dùng giao diện gốc của Zalo (các tiện ích như pet, OCR, dịch vẫn chạy). Màu sắc của mọi theme đều đi qua các biến `--zg-*`, nên thêm theme mới chỉ cần khai báo một bảng màu (xem [docs/add-theme.md](docs/add-theme.md)).
 
 <p align="center"><img src="docs/img/themes-grid.jpg" alt="Bốn theme ở chế độ sáng và tối" width="820"></p>
 
@@ -105,9 +105,21 @@ Kéo thẻ file trong chat thả thẳng vào Finder / Explorer, thay cho nút *
 
 ### OCR trên ảnh
 
+Có thể tắt trong bảng tuỳ chọn, mục "OCR trên ảnh".
+
 Trình xem ảnh tự nhận dạng chữ khi mở ảnh. Chữ được phủ lên đúng vị trí trên ảnh, có thể bôi đen và sao chép bằng `⌘C` / `Ctrl+C`, hoặc bấm **Sao chép tất cả** để lấy toàn bộ. Nút `Aa` trên thanh công cụ (hoặc phím `T`) bật/tắt tính năng này. macOS dùng Vision, Windows dùng `ocr.ps1`, Linux dùng `tesseract`.
 
 <p align="center"><img src="docs/img/ocr.jpg" alt="Bôi đen chữ trực tiếp trên ảnh trong trình xem ảnh" width="820"></p>
+
+### Dịch tin nhắn
+
+Chỉ macOS 26 trở lên (Windows và Linux tạm tắt). Dịch bằng Translation của Apple, chạy hoàn toàn trên máy, không gửi nội dung ra ngoài. Cần tải trước gói ngôn ngữ trong Cài đặt hệ thống > Ngôn ngữ & vùng > Ngôn ngữ dịch.
+
+- Bật trong bảng tuỳ chọn, mục "Dịch tin nhắn", chọn Tiếng Việt hoặc English.
+- Rê chuột vào tin chữ, bấm nút dịch cùng hàng với Trả lời / Chia sẻ, hoặc chuột phải chọn "Dịch tin nhắn". Bản dịch hiện dưới chữ gốc (tin reply chỉ dịch phần chữ, không dịch phần trích dẫn). Bấm lại để ẩn.
+- Bản dịch được lưu trong `~/.zalo-glass/translations/` nên mở lại chat vẫn còn. Nút "Xoá" ở mục này xoá toàn bộ lịch sử dịch (có hỏi xác nhận).
+- Helper dịch chạy nền để chỉ nạp model một lần (lần dịch đầu ~3 giây, các lần sau ~0,5 giây, tốn ~20 MB RAM và 0% CPU khi nhàn rỗi). Mặc định giữ 30 phút sau lần dịch cuối rồi tự thoát; chỉnh số phút trong mục "Dịch tin nhắn" của bảng tuỳ chọn (0 = thoát ngay sau mỗi lần, đổi có tác dụng ngay).
+- Bản dịch cũng bị che khi bật "Nội dung tin nhắn" trong phần Ẩn trong hội thoại.
 
 ### Album, phím tắt
 
@@ -162,7 +174,7 @@ powershell -ExecutionPolicy Bypass -File uninstall.ps1
 | Biến | Ý nghĩa |
 |---|---|
 | `ZALO_APP` | Thư mục cài Zalo, nếu không nằm ở vị trí mặc định. |
-| `GLASS_JS` | Danh sách module JS được nạp. Mặc định `"blur album keys ocr pet meet drag"`. Bỏ một tên khỏi danh sách để tắt tính năng tương ứng. Module `templates` luôn được nạp trước. |
+| `GLASS_JS` | Danh sách module JS được nạp. Mặc định `"blur album keys ocr pet meet drag translate"`. Bỏ một tên khỏi danh sách để tắt tính năng tương ứng. Module `templates` luôn được nạp trước. |
 | `GLASS_TRANSPARENT=1` | Cửa sổ trong suốt. Chỉ macOS, thử nghiệm. |
 
 Ví dụ, chỉ cài theme và tính năng che nội dung:
@@ -192,7 +204,7 @@ Commit theo [Conventional Commits](https://www.conventionalcommits.org/) (`feat:
 ## Lưu ý
 
 - Đã kiểm tra trên macOS và Windows. Đường dẫn cài Zalo trên Linux chưa được kiểm chứng, nếu không tìm thấy thì đặt `ZALO_APP`.
-- OCR trên macOS cần Xcode Command Line Tools để biên dịch `ocr.swift`. OCR trên Linux cần `tesseract` và `tesseract-ocr-vie`.
+- OCR và dịch trên macOS cần Xcode Command Line Tools để biên dịch `ocr.swift`, `translate.swift`. OCR trên Linux cần `tesseract` và `tesseract-ocr-vie`.
 - Bản cập nhật của Zalo có thể đổi tên class và làm lệch một số selector. Khi gặp lỗi, hãy mở issue kèm phiên bản Zalo và ảnh chụp.
 - Lucent là dự án cộng đồng, không liên quan tới VNG hay Zalo. Chỉnh sửa ứng dụng của bên thứ ba luôn có rủi ro, hãy cân nhắc trước khi dùng. Bản gốc được lưu trong `~/.zalo-glass-backup/`.
 

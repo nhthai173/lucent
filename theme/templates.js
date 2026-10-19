@@ -23,6 +23,12 @@
       "--zg-l1": "rgba(90, 210, 130, 0.42)", "--zg-l2": "rgba(170, 225, 90, 0.35)", "--zg-l3": "rgba(70, 200, 190, 0.30)", "--zg-l4": "rgba(210, 230, 110, 0.25)" } },
   };
 
+  // "Zalo mặc định": templates.js tắt file CSS theme (zalo-glass-theme.css) nên chỉ cần màu trung tính + xanh Zalo cho các thành phần của Lucent (pet, menu, OCR, bản dịch)
+  const clear = "rgba(0, 0, 0, 0)";
+  THEMES.zalo = { name: "Zalo mặc định", native: true, vars: {
+    "--zg-primary": "0 104 255", "--zg-ink": "128 138 160", "--zg-ink2": "110 120 140", "--zg-accent": "76 156 255", "--zg-bg-d": "#1d2025", "--zg-bg-l": "#ffffff",
+    "--zg-d1": clear, "--zg-d2": clear, "--zg-d3": clear, "--zg-d4": clear, "--zg-d5": clear, "--zg-l1": clear, "--zg-l2": clear, "--zg-l3": clear, "--zg-l4": clear } };
+
   // ---- pet ----
   // Hợp đồng sprite (viewBox 40×36): .zp-body .zp-tail .zp-leg-a/.zp-leg-b .zp-pupil, bốn bộ mắt .zp-eyes + .zp-open/.zp-happy/.zp-x/.zp-sleep,
   // đạo cụ cho gag .zp-p-zap/.zp-p-gun/.zp-p-oxy và .zp-tears. Thiếu phần tử nào thì gag/hiệu ứng tương ứng chỉ là không hiện.
@@ -273,6 +279,7 @@
   const keys = [...new Set(Object.values(THEMES).flatMap((t) => Object.keys(t.vars)))];
   const apply = () => {
     const s = load(), t = THEMES[s.theme] || THEMES.glass, root = document.documentElement.style;
+    const lk = document.querySelector('link[href="zalo-glass-theme.css"]'); if (lk) lk.disabled = !!t.native;
     keys.forEach((k) => root.removeProperty(k));
     Object.entries(t.vars).forEach(([k, v]) => root.setProperty(k, v));
     // Chromium của Electron 22 chưa có color-mix() → tính sẵn các sắc độ của --zg-primary (d = pha đen, l = pha trắng; số = % giữ lại màu gốc)

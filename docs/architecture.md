@@ -8,10 +8,11 @@ How Lucent gets into Zalo, what runs where, and where state lives. Read this bef
 
 | Edited file inside `app.asar` | Content |
 |---|---|
-| `pc-dist/zalo-glass.css` (new) | `dark("dark-base.css")` + `dark("glass.css")` + `glass-light.css` + `blur.css` + `album.css` + `ocr.css` + `pet.css` (+ `transparent.css` when `GLASS_TRANSPARENT=1` on macOS) |
+| `pc-dist/zalo-glass-theme.css` (new) | `dark("dark-base.css")` + `dark("glass.css")` + `glass-light.css` (+ `transparent.css` when `GLASS_TRANSPARENT=1` on macOS). `templates.js` sets `disabled` on its `<link>` when the selected theme has `native: true` ("Zalo mặc định"), which restores Zalo's own look |
+| `pc-dist/zalo-glass.css` (new) | `blur.css` + `album.css` + `ocr.css` + `pet.css` + `translate.css` (features, always on) |
 | `pc-dist/zalo-glass.js` (new) | `templates.js` first, then each name in `GLASS_JS` as `theme/<name>.js`, concatenated |
 | `pc-dist/index.html`, `pc-dist/popup-viewer.html` | `</head>` replaced to link the two files above; CSP `connect-src 'self'` widened with `http://127.0.0.1:47831` (OCR/config server) |
-| `bootstrap.js` | `opts-main.js` + `ocr-main.js` (+ `vibrancy.js`) **prepended** to Zalo's own code |
+| `bootstrap.js` | `opts-main.js` + `translate-main.js` + `ocr-main.js` + `drag-main.js` (+ `vibrancy.js`) **prepended** to Zalo's own code |
 | `pc-dist/lazy/*.js` | Any chunk containing `enable_fps_monitor` has the flag names renamed so Zalo's FPS monitor (a ~100/s `requestAnimationFrame` loop that keeps the GPU awake) is permanently off |
 
 `dark(f)` rewrites lines that start with `body {` into `body.dark {`. So **in `dark-base.css` and `glass.css` a top-level `body {` block applies in dark mode only**. Selectors other than a line-initial `body {` (for example `:root {`, `html {`, `body::before`) are left untouched and therefore apply in both modes. `glass-light.css` is not rewritten; it uses `body:not(.dark)`.
@@ -41,8 +42,10 @@ How Lucent gets into Zalo, what runs where, and where state lives. Read this bef
 | `album.js` (+`album.css`) | main/popup | Horizontal album carousel (active when body has `zg-album`) |
 | `keys.js` | main/popup | Keyboard shortcuts for conversations/messages |
 | `meet.js` | main/popup | Adds "Tạo cuộc họp Google Meet" to the chat toolbar "…" menu |
+| `translate.js` (+`translate.css`) | main/popup | Message translation (macOS only): action-row button, context-menu item, stored results in `~/.zalo-glass/translations/` (`/translate`, `/translations` routes in `ocr-main.js`, `translate.swift` helper) |
 | `ocr.js` (+`ocr.css`) | viewer | Live-Text-style OCR overlay on images |
 | `opts-main.js` | main process | Perf options from `~/.zalo-glass/config.json` (RAM flags, no auto-update, throttling, lazy notification window, fake ZaloCap/ZaloCall) |
+| `translate-main.js` | main process | Keeps the `translate` helper (Swift, Apple Translation) running; `globalThis.__zgTr(to, text, cb)`; exits after `trKeep` minutes idle (config.json, default 30) |
 | `ocr-main.js` | main process | Local HTTP server (OCR + config) |
 | `vibrancy.js`, `transparent.css` | main process / CSS | macOS experimental transparent window |
 

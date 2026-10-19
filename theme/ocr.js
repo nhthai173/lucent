@@ -41,9 +41,10 @@
       clipPath: `inset(${Math.max(0, c.top - r.top)}px ${Math.max(0, r.right - c.right)}px ${Math.max(0, r.bottom - c.bottom)}px ${Math.max(0, c.left - r.left)}px)` });
   };
 
+  const off = () => document.body.classList.contains("zg-ocr-off"); // tắt trong menu mắt (blur.js)
   const scan = async () => {
     const i = img();
-    if (!i || !i.currentSrc) return;
+    if (!i || !i.currentSrc || off()) return;
     src = i.currentSrc; clear(); say("Đang quét chữ…");
     try {
       const path = decodeURIComponent(new URL(src).pathname);
@@ -62,7 +63,7 @@
     if (!on) return;
     if (document.hidden) return void setTimeout(loop, 500); // cửa sổ ẩn thì khỏi chạy mỗi frame
     const i = img();
-    if (i && i.currentSrc && i.currentSrc !== src) scan(); // đổi ảnh bằng ←/→ hoặc thumbnail
+    if (i && i.currentSrc && i.currentSrc !== src && !off()) scan(); // đổi ảnh bằng ←/→ hoặc thumbnail
     if (box) place(); // không có lớp chữ thì khỏi đo layout mỗi frame
     requestAnimationFrame(loop);
   };
@@ -80,7 +81,7 @@
       if ((e.metaKey || e.ctrlKey) && e.key === "c" && box && getSelection().toString()) { navigator.clipboard.writeText(getSelection().toString()); e.preventDefault(); }
       return;
     }
-    if (e.key === "t" || e.key === "T") { toggle(); e.preventDefault(); }
+    if ((e.key === "t" || e.key === "T") && !off()) { toggle(); e.preventDefault(); }
   }, true);
 
   // React vẽ lại thanh công cụ thì nút mất → gắn lại

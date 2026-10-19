@@ -19,3 +19,6 @@
 }
 .zg-ocr-pill.copy { cursor: pointer; }
 .zg-ocr-pill.copy:hover { background: rgb(var(--zg-accent) / 0.9); }
+
+/* tắt OCR trong menu mắt (blur.js đặt class lên body) */
+body.zg-ocr-off :is(.zg-ocr, .zg-ocr-pill, .zg-ocr-btn) { display: none !important; }

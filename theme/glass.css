@@ -156,6 +156,10 @@ body::before {
 :is(.popover, .zmenu-body, .zmenu, [class*="popover"], [class*="context-menu"]) :is(.zmenu-body, .zmenu, .popover) {
   background-color: transparent !important; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0;
 }
+/* menu (menu chuột phải, menu thanh bên…) và submenu cùng một nền gần đặc: submenu lồng trong menu cha nên backdrop-filter của cha chặn blur của con (blur chỉ trong phạm vi cha),
+   và blur 28px của menu cha cũng không che được icon/chữ lớp dưới → để hai lớp giống hệt nhau thì không cần blur */
+body.dark :is(.popover-v3, .zmenu-body.sub-menu) { background-color: rgba(22, 24, 44, 0.92) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
+body.dark .zmenu-body.sub-menu { border-radius: 12px; box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45); }
 .zmenu-item:not(:hover, .hovered) { background-color: transparent !important; }
 
 /* cửa sổ hẹp: khung chat đè lên danh sách hội thoại, danh bạ đè lên menu danh bạ, panel tìm kiếm đè lên khung chat.

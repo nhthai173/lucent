@@ -3,7 +3,7 @@
 // GET /ocr?p=<đường dẫn ảnh>. Chỉ đọc file nằm trong thư mục ZaloData; không nhận gì khác.
 try {
   const os = require("os"), path = require("path"), fs = require("fs"), { execFile } = require("child_process");
-  const WIN = process.platform === "win32", MAC = process.platform === "darwin", DIR = path.join(os.homedir(), ".zalo-glass");
+  const WIN = process.platform === "win32", MAC = process.platform === "darwin", DIR = path.join(os.homedir(), ".zalo-glass"), TR = path.join(DIR, "translations");
   const inMedia = (p) => (MAC ? p.startsWith(path.join(os.homedir(), "Library/Application Support/ZaloData/media") + path.sep) : p.split(path.sep).includes("ZaloData")); // ponytail: Win/Linux chưa kiểm chứng đường dẫn ZaloData, siết lại khi có máy thật
   const opt = { timeout: 120000, maxBuffer: 1 << 24, windowsHide: true };
   // mỗi engine trả JSON [{t,x,y,w,h}] chuẩn hoá 0–1
@@ -37,7 +37,7 @@ try {
         const Z = globalThis.__zgCfg;
         if (!Z) return fail(501, "no config");
         const k = u.searchParams.get("set");
-        return done(JSON.stringify(k ? Z.set(k, u.searchParams.get("v") === "1") : Z.read()));
+        return done(JSON.stringify(k ? Z.set(k, typeof Z.DEF[k] === "number" ? +u.searchParams.get("v") : u.searchParams.get("v") === "1") : Z.read()));
       }
       if (u.pathname === "/restart") { // menu "Khởi động lại Zalo"; chỉ POST (trang web ngoài gửi POST sẽ mang Origin http → đã bị chặn ở trên)
         if (req.method !== "POST") return fail(405, "POST only");
@@ -49,6 +49,41 @@ try {
         if (!D) return fail(501, "no drag");
         if (u.searchParams.get("m") === "arm") { D.arm(); return done("{}"); }
         return D.start(path.basename(u.searchParams.get("n") || ""), (ok) => (ok ? done("{}") : fail(404, "no file")));
+      }
+      if (u.pathname === "/translations") { // bản dịch đã lưu của 1 ngôn ngữ (translate.js hiện lại khi mở chat)
+        const to = u.searchParams.get("to");
+        if (!["vi", "en"].includes(to)) return fail(400, "bad lang");
+        try { return done(fs.readFileSync(path.join(TR, to + ".json"), "utf8")); } catch { return done("{}"); }
+      }
+      if (u.pathname === "/translations/del") { // gỡ 1 bản dịch đã lưu (nút "Gỡ bản dịch")
+        if (req.method !== "POST") return fail(405, "POST only");
+        const to = u.searchParams.get("to"), k = u.searchParams.get("k") || "", f = path.join(TR, to + ".json");
+        if (!["vi", "en"].includes(to) || !/^[0-9a-f]{1,16}$/.test(k)) return fail(400, "bad request");
+        try { const m = JSON.parse(fs.readFileSync(f, "utf8")); delete m[k]; fs.writeFileSync(f, JSON.stringify(m)); } catch {}
+        return done("{}");
+      }
+      if (u.pathname === "/translations/clear") { // nút "Xoá lịch sử dịch" trong menu mắt
+        if (req.method !== "POST") return fail(405, "POST only");
+        for (const l of ["vi", "en"]) try { fs.unlinkSync(path.join(TR, l + ".json")); } catch {}
+        return done("{}");
+      }
+      if (u.pathname === "/translate") { // dịch local bằng Apple Translation (chỉ macOS 26+); POST text thuần, ?to=vi|en&k=<khoá lưu>
+        if (req.method !== "POST") return fail(405, "POST only");
+        if (!MAC) return fail(501, "dịch chưa hỗ trợ trên " + process.platform);
+        const to = u.searchParams.get("to"), k = u.searchParams.get("k") || "";
+        if (!["vi", "en"].includes(to) || !/^[0-9a-f]{1,16}$/.test(k)) return fail(400, "bad request");
+        if (!globalThis.__zgTr) return fail(501, "chưa có helper dịch");
+        let body = "";
+        req.on("data", (d) => { body += d; if (body.length > 5000) req.destroy(); });
+        req.on("end", () => globalThis.__zgTr(to, body, (r) => {
+          if (r.error) return fail(500, String(r.error).slice(0, 200));
+          try { // lưu lại: ~/.zalo-glass/translations/<ngôn ngữ>.json {khoá: bản dịch}
+            const f = path.join(TR, to + ".json");
+            fs.mkdirSync(TR, { recursive: true }); let m = {}; try { m = JSON.parse(fs.readFileSync(f, "utf8")); } catch {} m[k] = r.t; fs.writeFileSync(f, JSON.stringify(m));
+          } catch {}
+          done(JSON.stringify({ t: r.t }));
+        }));
+        return;
       }
       if (u.pathname !== "/ocr") return fail(404, "not found");
       if (!engine) return fail(501, "OCR chưa hỗ trợ trên " + process.platform);

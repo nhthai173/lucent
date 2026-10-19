@@ -11,6 +11,7 @@
     album: ICON('<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M20 8v8M7 3h10"/>'),
     pet: ICON('<circle cx="8" cy="8" r="1.7"/><circle cx="16" cy="8" r="1.7"/><circle cx="5" cy="13" r="1.7"/><circle cx="19" cy="13" r="1.7"/><path d="M12 12c-3 0-5 3-5 5 0 1.5 1.5 2 3 1.5 1.3-.4 2.7-.4 4 0 1.5.5 3 0 3-1.5 0-2-2-5-5-5z"/>'),
     theme: ICON('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/>'),
+    tr: ICON('<path d="M4 5h9M8.5 3v2M6 5c0 4 3 7 6 8M12 5c-1 4-4 7-8 8M13 20l4-9 4 9M14.5 17h5"/>'),
     perf: ICON('<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>'),
   };
   const GROUPS = [
@@ -18,10 +19,13 @@
     ["Ẩn trong hội thoại", I.chat, [["cmsg", "Nội dung tin nhắn"], ["cimg", "Ảnh / album"], ["cname", "Tên & avatar"]]],
     ["Ẩn khi xem ảnh", I.img, [["view", "Ảnh, thumbnail, người gửi"]]],
     ["Hiển thị ảnh trong hội thoại", I.album, "album"], // select: Mặc định (dạng gốc của Zalo) | Cuộn ngang
+    ...(/Mac/.test(navigator.platform) ? [["Dịch tin nhắn (Apple, chạy local)", I.tr, "tr"]] : []), // ponytail: engine mới có cho macOS; Windows/Linux ẩn mục này
+    ["OCR trên ảnh", I.img, [["ocr", "Quét chữ khi xem ảnh"]]], // mặc định bật; ocr.js (viewer) đọc class zg-ocr-off
     ["Giao diện", I.theme, "@theme"], // select template theme / pet (templates.js)
     ["Pet", I.pet, [["pet", "Hiện pet"], ["petbig", "Phóng to pet khi đang che"]]], // Hiện pet mặc định bật, Phóng to mặc định tắt; pet.js đọc class zg-pet-off / zg-pet-big
   ];
-  const OPTS = GROUPS.flatMap(([, , o]) => (Array.isArray(o) ? o : o === "album" ? [["album"]] : [])), PET = ["pet", "petbig", "album"], isOn = (k) => (k === "pet" ? st[k] !== false : !!st[k]); // chỉ "pet" mặc định bật
+  const OPTS = GROUPS.flatMap(([, , o]) => (Array.isArray(o) ? o : o === "album" || o === "tr" ? [[o]] : [])), PET = ["pet", "petbig", "album", "tr", "ocr"], isOn = (k) => (k === "pet" || k === "ocr" ? st[k] !== false : !!st[k]); // "pet" và "ocr" mặc định bật
+  const selVal = (k) => (st[k] === true ? "1" : st[k] || ""); // album lưu boolean, tr lưu mã ngôn ngữ
   const svg = (extra) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>${extra}</svg>`;
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
   let st = load();
@@ -32,14 +36,16 @@
     // "view" chỉ áp ở viewer: ảnh trong khung chat cũng dùng class zimg-el
     OPTS.forEach(([k]) => !PET.includes(k) && document.body.classList.toggle("zg-hide-" + k, !!st[k] && (k !== "view" || VIEWER)));
     document.body.classList.toggle("zg-album", !!st.album); // mặc định tắt
+    document.body.dataset.zgTr = st.tr || ""; // translate.js đọc ngôn ngữ đích ("" = tắt)
     document.body.classList.toggle("zg-pet-big", isOn("petbig"));
     document.body.classList.toggle("zg-pet-off", !isOn("pet"));
+    document.body.classList.toggle("zg-ocr-off", !isOn("ocr"));
     const any = OPTS.some(([k]) => !PET.includes(k) && st[k]);
     if (btn) { btn.classList.toggle("on", any); btn.innerHTML = svg(any ? '<path d="M3 3l18 18"/>' : ""); btn.title = "Che tin nhắn & tuỳ chọn"; }
   };
 
   // Nhóm "Hiệu năng": đọc/ghi qua server localhost ở main process (ocr-main.js ↔ opts-main.js), áp dụng khi mở lại Zalo
-  const PERF = [["ram", "Giảm RAM (low-end mode)"], ["noUpdate", "Tắt tự cập nhật"], ["throttle", "Giảm tải khi ẩn / thu nhỏ"], ["lazyNoti", "Hoãn nạp cửa sổ thông báo"], ["noCap", "Tắt ZaloCap (chụp màn hình)", "Khi tắt ZaloCap, Zalo không dán (paste) được ảnh/file từ clipboard vào khung chat. Cần dán ảnh/file thì đừng bật mục này."], ["noCall", "Tắt ZaloCall (gọi thoại / video)"]];
+  const PERF = [["ram", "Giảm RAM (low-end mode)"], ["noUpdate", "Tắt tự cập nhật"], ["throttle", "Giảm tải khi ẩn / thu nhỏ"], ["lazyNoti", "Hoãn nạp cửa sổ thông báo", "Chỉ liên quan tới cửa sổ thông báo riêng của Zalo trên Windows/Linux: hoãn nạp có thể làm thông báo đầu tiên bị trễ hoặc mất nội dung, nên không bật ở đó. Trên macOS Zalo dùng thông báo hệ thống nên mục này gần như không có tác dụng."], ["noCap", "Tắt ZaloCap (chụp màn hình)", "Khi tắt ZaloCap, Zalo không dán (paste) được ảnh/file từ clipboard vào khung chat. Cần dán ảnh/file thì đừng bật mục này."], ["noCall", "Tắt ZaloCall (gọi thoại / video)"]];
   const API = "http://127.0.0.1:47831/config";
   const sech = (icon, title) => { const h = document.createElement("div"); h.className = "zg-h"; h.innerHTML = icon; h.append(title); return h; };
   const perf = async () => {
@@ -98,9 +104,27 @@
       if (opts[0] === "@") { sec.append(cards("theme")); body.append(sec); return; } // theme: lưới thẻ preview
       if (!Array.isArray(opts)) { // select Mặc định / Cuộn ngang
         const s = document.createElement("select");
-        s.dataset.k = opts; s.innerHTML = '<option value="">Mặc định</option><option value="1">Cuộn ngang</option>'; s.value = isOn(opts) ? "1" : "";
-        s.onchange = () => { st[opts] = !!s.value; try { localStorage.setItem(KEY, JSON.stringify(st)); } catch {} render(); };
-        h.append(s); body.append(sec); return;
+        s.dataset.k = opts; s.innerHTML = opts === "tr" ? '<option value="">Tắt</option><option value="vi">Tiếng Việt</option><option value="en">English</option>' : '<option value="">Mặc định</option><option value="1">Cuộn ngang</option>'; s.value = selVal(opts);
+        s.onchange = () => { st[opts] = opts === "tr" ? s.value : !!s.value; try { localStorage.setItem(KEY, JSON.stringify(st)); } catch {} render(); };
+        h.append(s);
+        if (opts === "tr") { // bản dịch lưu ở ~/.zalo-glass/translations/ (ocr-main.js); xoá phải xác nhận
+          const l = document.createElement("label");
+          l.innerHTML = "<span>Lịch sử dịch (lưu trên máy)</span><button type=\"button\">Xoá</button>";
+          l.lastChild.onclick = async (e) => {
+            e.preventDefault();
+            if (!confirm("Xoá toàn bộ lịch sử dịch đã lưu?\nBản dịch trên các tin nhắn sẽ biến mất và không khôi phục được.")) return;
+            try { await fetch(API.replace("/config", "/translations/clear"), { method: "POST" }); dispatchEvent(new Event("zg-tr-clear")); } catch {}
+          };
+          sec.append(l);
+          const k = document.createElement("label"); // thời gian giữ helper dịch chạy nền (translate-main.js): nạp model một lần cho các lần dịch sau, tốn ~15 MB RAM khi đang giữ
+          k.innerHTML = '<span>Giữ helper dịch trong bộ nhớ (phút)</span><input type="number" min="0" max="1440" step="5" class="zg-num">';
+          k.title = "0 = tắt hẳn sau mỗi lần dịch (mỗi lần dịch chậm hơn ~2 giây vì phải nạp lại model). Đổi có tác dụng ngay.";
+          const n = k.lastChild;
+          fetch(API).then((r) => r.json()).then((c) => (n.value = c.trKeep ?? 30)).catch(() => (n.value = 30));
+          n.onchange = () => { n.value = Math.max(0, Math.min(1440, Math.round(+n.value) || 0)); fetch(`${API}?set=trKeep&v=${n.value}`).catch(() => {}); };
+          sec.append(k);
+        }
+        body.append(sec); return;
       }
       if (title === "Pet") sec.append(cards("pet"));
       opts.forEach(([k, label]) => {
@@ -136,7 +160,7 @@
     if (e.key !== KEY) return;
     st = load(); render();
     menu?.querySelectorAll("input[data-k]").forEach((c) => (c.checked = isOn(c.dataset.k)));
-    menu?.querySelectorAll("select[data-k]").forEach((s) => (s.value = isOn(s.dataset.k) ? "1" : ""));
+    menu?.querySelectorAll("select[data-k]").forEach((s) => (s.value = selVal(s.dataset.k)));
   });
 
   const init = () => { render(); let q = 0; new MutationObserver(() => q || (q = requestAnimationFrame(() => { q = 0; mount(); }))).observe(document.body, { childList: true, subtree: true }); mount(); };

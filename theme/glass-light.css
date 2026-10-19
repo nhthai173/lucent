@@ -137,3 +137,6 @@ body:not(.dark) .toast-v2 .toast-content:not(.no-background) {
 
 /* Màn hình khoá: nền đặc, không để lộ chat phía sau */
 body:not(.dark) .app-lock { background: #eef0fa !important; }
+
+body:not(.dark) :is(.popover-v3, .zmenu-body.sub-menu) { background-color: rgba(250, 251, 255, 0.95) !important; border: 1px solid rgba(255, 255, 255, 0.8) !important; }
+body:not(.dark) .zmenu-body.sub-menu { background-color: rgba(250, 251, 255, 0.95) !important; border: 1px solid rgba(255, 255, 255, 0.8) !important; border-radius: 12px; box-shadow: 0 8px 28px rgba(40, 50, 90, 0.2); }
