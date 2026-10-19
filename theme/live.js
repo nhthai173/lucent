@@ -1,6 +1,6 @@
 // Dịch khi soạn tin (live translate, kiểu Google Translate): nút cạnh nút định dạng chữ (Aa) mở khung dưới ô soạn, bản dịch cập nhật theo lúc gõ; "Dùng bản dịch" thay nội dung ô soạn.
 // Mention và emoji không đi qua bản dịch: đổi thành token ZQ<n>X trước khi dịch, dịch xong ráp lại bằng chính phần tử gốc (giữ nguyên mention thật). Dùng chung engine/route /translate với translate.js.
-// Cấu trúc ô soạn của Zalo: #richInput > div#input_line_N > span#input_part_M (chữ) | span.clnMention | span.emoji-sizer; Zalo đọc lại DOM này lúc gửi nên sửa DOM trực tiếp là đủ (đã thử gửi thật).
+// Cấu trúc ô soạn của Zalo: #richInput > div#input_line_N > span#input_part_M (chữ) | span.clnMention | span.emoji-sizer; Zalo đọc lại DOM này lúc gửi nên sửa DOM trực tiếp là đủ (nhưng gửi đi lấy từ trạng thái nội bộ nên phải bắn sự kiện input sau khi sửa).
 (() => {
   if (location.pathname.endsWith("popup-viewer.html")) return;
   const API = "http://127.0.0.1:47831/translate", KEY = "zg-live", TOK = /ZQ(\d+)X/;
@@ -62,18 +62,55 @@
   };
   const later = () => { clearTimeout(timer); timer = setTimeout(run, 450); };
 
-  const mk = (txt) => { const s = Object.assign(document.createElement("span"), { className: "", textContent: txt }); s.style.whiteSpace = "pre-wrap"; s.dataset.mention = txt; return s; };
-  const use = () => { // thay nội dung ô soạn bằng bản dịch, giữ nguyên phần tử mention/emoji gốc
+  // Thay nội dung ô soạn bằng bản dịch bằng thao tác sửa như người dùng gõ (execCommand → beforeinput/input thật): Zalo giữ trạng thái riêng
+  // (vị trí mention...) và gửi từ trạng thái đó, nên sửa thẳng DOM làm lệch vị trí mention (đã thử: "Hello@Tên..i").
+  // Sửa từng đoạn chữ nằm giữa các mention (mỗi dòng riêng, từ cuối lên đầu): chèn bản mới vào CUỐI đoạn cũ rồi xoá đoạn cũ từ đầu (forwardDelete);
+  // xoá hết rồi chèn, hoặc chọn-thay-thế thì Zalo/Chrome dồn chữ vào span mention và nhân đôi mention (đã thử). Zalo vẽ lại dòng bất đồng bộ nên chờ giữa các thao tác.
+  // Không chèn được xuống dòng bằng execCommand (insertText "\n"/insertParagraph/paste giả đều bị Zalo bỏ) nên bản dịch phải CÙNG số dòng với bản gốc (dịch từng dòng đảm bảo điều này).
+  // ponytail: số dòng/thứ tự mention-emoji khác, hoặc đoạn rỗng mà bản dịch có chữ thì xoá hết và dán bản dịch gộp thành MỘT dòng, mention/emoji thành chữ thường (mất mention thật). Nâng cấp: chèn mention qua popup @ của Zalo.
+  const isTok = (n) => n.nodeType === 1 && (n.classList.contains("clnMention") || n.classList.contains("emoji-sizer"));
+  const gapsOf = (line) => { // các đoạn chữ của một dòng, tính lại từ DOM hiện tại
+    const old = [[]];
+    [...line.childNodes].forEach((n) => (isTok(n) ? old.push([]) : old[old.length - 1].push(n)));
+    return old.map((g) => g.filter((n) => n.textContent));
+  };
+  const tick = () => new Promise((r) => setTimeout(r, 40));
+  const glen = (s) => [...new Intl.Segmenter().segment(s)].length; // forwardDelete xoá theo ký tự hiển thị (emoji = 1), không theo UTF-16
+  const use = async () => {
     const ri = rich(), { t, lines } = parse();
-    if (!res || !lines.length) return;
-    const used = new Set();
-    const nl = split(res, (x, tok) => ({ x, tok })).map((ln) => ln.flatMap(({ x, tok }) => (tok ? (t[+x] && !used.has(+x) ? (used.add(+x), [t[+x]]) : []) : x ? [mk(x)] : [])));
-    t.forEach((e, i) => used.has(i) || nl[nl.length - 1].push(mk(" "), e));
-    while (lines.length < nl.length) { const c = lines[0].cloneNode(false); lines[lines.length - 1].after(c); lines.push(c); } // ponytail: bản dịch nhiều dòng hơn bản gốc (Google tách thêm) thì thêm dòng mới nhân bản từ dòng đầu
-    lines.forEach((ln, i) => { if (i < nl.length) ln.replaceChildren(...(nl[i].length ? nl[i] : [document.createElement("br")])); else ln.remove(); });
-    ri.querySelectorAll(":scope > div").forEach((ln, i) => { ln.id = "input_line_" + i; });
-    ri.querySelectorAll(":scope > div > span").forEach((s, i) => { s.id = "input_part_" + i; });
-    ri.focus(); const r = document.createRange(); r.selectNodeContents(ri); r.collapse(false); getSelection().removeAllRanges(); getSelection().addRange(r);
+    if (!res || !ri) return;
+    const tl = res.split("\n"), ng = tl.map((l) => l.split(TOK).filter((_, j) => j % 2 === 0)), nt = tl.flatMap((l) => (l.match(/ZQ(\d+)X/g) || []).map((x) => +x.slice(2, -1)));
+    const ex = (c, v) => document.execCommand(c, false, v), sel = getSelection(), caret = (n, o) => { const r = document.createRange(); r.setStart(n, o); r.collapse(true); sel.removeAllRanges(); sel.addRange(r); };
+    const first = (n) => (n.firstChild && n.nodeType === 1 ? first(n.firstChild) : n), last = (n) => (n.lastChild && n.nodeType === 1 ? last(n.lastChild) : n);
+    ri.focus();
+    let ok = tl.length === lines.length && nt.length === t.length && nt.every((v, j) => v === j) && t.every((e) => e.classList.contains("clnMention")); // emoji: Zalo dẹt sprite thành ký tự khi vẽ lại dòng → đi đường dán gộp
+    if (ok) ok = lines.every((ln, i) => { const g = gapsOf(ln); return g.length === ng[i].length && g.every((n, k) => n.length || !ng[i][k]); });
+    if (ok) {
+      try {
+        for (let li = lines.length - 1; li >= 0; li--) {
+          for (let g = ng[li].length - 1; g >= 0; g--) {
+            const all = gapsOf(rich().querySelectorAll(":scope > div")[li]);
+            if (all.length !== ng[li].length) throw 0; // Zalo đã đổi cấu trúc dòng giữa chừng
+            let nodes = all[g];
+            if (!nodes.length) continue; // đoạn rỗng và bản dịch cũng rỗng
+            const len = glen(nodes.map((n) => n.textContent).join("")), e = last(nodes[nodes.length - 1]);
+            if (ng[li][g]) { caret(e, e.textContent.length); ex("insertText", ng[li][g]); await tick(); }
+            nodes = gapsOf(rich().querySelectorAll(":scope > div")[li])[g];
+            caret(first(nodes[0]), 0);
+            for (let i = 0; i < len; i++) ex("forwardDelete");
+            await tick();
+          }
+        }
+      } catch { ok = false; }
+    }
+    if (!ok) {
+      const name = (e) => e.dataset.mention || e.dataset.name || e.textContent, seen = new Set();
+      const full = res.replace(/ZQ(\d+)X/g, (_, i) => (seen.add(+i), t[+i] ? name(t[+i]) : "")) + t.map((e, i) => (seen.has(i) ? "" : " " + name(e))).join("");
+      ri.focus(); ex("selectAll"); // thay thế vùng chọn bằng bản dịch trong MỘT thao tác: xoá trước rồi chèn thì Zalo vẽ lại ô soạn và chèn sau đó không còn tác dụng (đã thử)
+      ex("insertText", full.split("\n").filter((x) => x.trim()).join(" "));
+    }
+    await tick();
+    const rr = rich(), r = document.createRange(); r.selectNodeContents(rr); r.collapse(false); sel.removeAllRanges(); sel.addRange(r);
   };
 
   const build = () => {
@@ -89,7 +126,7 @@
     sel.value = st.to;
     sel.onchange = () => { st.to = sel.value; save(); run(); };
     swap.onclick = () => { st.to = st.to === "vi" ? "en" : "vi"; sel.value = st.to; save(); run(); };
-    useBtn.onclick = use;
+    useBtn.onclick = () => { useBtn.disabled = true; use().catch(() => {}); }; // bất đồng bộ: có chờ giữa các thao tác sửa
     x.onclick = () => { st.on = false; save(); scan(); };
     pane.addEventListener("mousedown", (e) => e.stopPropagation()); // không để Zalo cướp focus/đóng popup khi bấm trong khung
   };
@@ -110,7 +147,7 @@
     }
     if (btn && !on) btn.closest("li").remove();
     btn?.classList.toggle("zg-on", st.on && on);
-    const c = document.getElementById("chat-box-input-container-id");
+    const c = document.getElementById("chatInput"); // trong ô soạn: cùng nền, cùng lề trái với chữ đang gõ
     if (st.on && on && c) {
       if (!pane) build();
       if (!pane.isConnected) { c.append(pane); run(); }

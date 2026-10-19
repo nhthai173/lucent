@@ -127,7 +127,7 @@ Tính năng mặc định tắt trên mọi máy: bật trong bảng tuỳ chọ
 
 ### Dịch khi soạn tin (live translate)
 
-Nút dịch nằm ngay sau nút định dạng chữ (Aa) trên thanh công cụ của ô soạn, hiện khi đã bật "Dịch tin nhắn". Bấm để mở khung dịch dưới ô soạn, kiểu Google Translate: ô soạn của Zalo giữ nguyên là ngôn ngữ gốc, bản dịch cập nhật trực tiếp bên dưới khi bạn gõ (chờ ~0,5 giây sau lần gõ cuối). Chọn ngôn ngữ đích ở ô chọn, nút ⇄ đảo giữa Tiếng Việt và English (ngôn ngữ gốc tự nhận). @mention và emoji không đi qua bản dịch mà được ghép lại nguyên vẹn. Bấm "Dùng bản dịch" để thay nội dung ô soạn bằng bản dịch rồi gửi như thường (Enter). Bản nháp không được lưu vào lịch sử dịch.
+Nút dịch nằm ngay sau nút định dạng chữ (Aa) trên thanh công cụ của ô soạn, hiện khi đã bật "Dịch tin nhắn". Bấm để mở khung dịch dưới ô soạn, kiểu Google Translate: ô soạn của Zalo giữ nguyên là ngôn ngữ gốc, bản dịch cập nhật trực tiếp bên dưới khi bạn gõ (chờ ~0,5 giây sau lần gõ cuối), nằm trong ô soạn cùng nền với ô nhập và bị che như tin nhắn khi bật chế độ che nội dung. Chọn ngôn ngữ đích ở ô chọn, nút ⇄ đảo giữa Tiếng Việt và English (ngôn ngữ gốc tự nhận). @mention và emoji không đi qua bản dịch mà được ghép lại nguyên vẹn. Bấm "Dùng bản dịch" để thay nội dung ô soạn bằng bản dịch rồi gửi như thường (Enter). Bản nháp không được lưu vào lịch sử dịch. Tin nhiều dòng được dịch và đặt lại từng dòng. Nếu bản dịch đổi thứ tự mention hoặc emoji thì nội dung được dán gộp thành một dòng và mention thành chữ thường.
 
 ### Album, phím tắt
 
