@@ -14,3 +14,21 @@ body[data-zg-tr=""] .zg-trb, body[data-zg-tr=""] .zg-tri { display: none !import
 /* "Gỡ bản dịch": icon đỏ như các thao tác huỷ của Zalo */
 .zg-trb[data-o="true"] .zg-trb-i, .zg-tri-off, .zg-tri-off * { color: #f2555a !important; }
 .zg-tri .menu-icon svg { width: 24px; height: 24px; }
+
+/* Dịch khi soạn tin (live.js): khung nằm dưới ô soạn, trong #chat-box-input-container-id */
+.zg-live-btn.zg-on { background: rgb(var(--zg-primary) / .28) !important; color: rgb(var(--zg-accent)); }
+.zg-live-ic { display: flex; }
+#zg-live { margin: 0 12px 10px; padding: 8px 12px 10px; border-radius: 12px; background: rgb(var(--zg-ink) / .09); border: 1px solid rgb(var(--zg-ink) / .16); }
+.zg-live-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 13px; color: var(--text-secondary); }
+.zg-live-sp { flex: 1; }
+#zg-live button { display: flex; align-items: center; justify-content: center; border: 0; cursor: pointer; font: inherit; color: var(--text-primary); background: transparent; border-radius: 8px; }
+.zg-live-swap, .zg-live-x { width: 28px; height: 28px; padding: 0; }
+.zg-live-swap:hover, .zg-live-x:hover { background: rgb(var(--zg-ink) / .16) !important; }
+#zg-live select { padding: 4px 8px; border: 1px solid rgb(var(--zg-ink) / .2); border-radius: 8px; font: inherit; color: var(--text-primary); background: transparent; cursor: pointer; }
+#zg-live select option { color: #081c36; background: #fff; }
+.zg-live-use { padding: 5px 12px !important; font-weight: 600; color: var(--button-primary-text, #fff) !important; background: var(--button-primary-normal, rgb(var(--zg-primary))) !important; }
+.zg-live-use:disabled { opacity: .4; cursor: default !important; }
+.zg-live-out { min-height: 22px; max-height: 140px; overflow: auto; font-size: 15px; line-height: 1.45; white-space: pre-wrap; color: var(--text-primary); user-select: text; }
+.zg-live-out.err { opacity: .7; }
+.zg-live-ph { opacity: .45; }
+.zg-live-tok.m { color: var(--text-mention); }

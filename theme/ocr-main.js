@@ -76,6 +76,7 @@ try {
         req.on("data", (d) => { body += d; if (body.length > 5000) req.destroy(); });
         req.on("end", () => globalThis.__zgTr(to, body, (r) => {
           if (r.error) return fail(500, String(r.error).slice(0, 200));
+          if (u.searchParams.get("n") === "1") return done(JSON.stringify({ t: r.t })); // bản nháp đang soạn (live.js): không lưu
           try { // lưu lại: ~/.zalo-glass/translations/<ngôn ngữ>.json {khoá: bản dịch}
             const f = path.join(TR, to + ".json");
             fs.mkdirSync(TR, { recursive: true }); let m = {}; try { m = JSON.parse(fs.readFileSync(f, "utf8")); } catch {} m[k] = r.t; fs.writeFileSync(f, JSON.stringify(m));

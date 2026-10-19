@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Cài / gỡ theme Glass cho Zalo PC (macOS, Windows, Linux) theo cách ZaDark: chèn CSS+JS vào pc-dist/index.html trong app.asar.
 //   ./install.sh | install.ps1 [--uninstall]   Chạy lại sau mỗi lần Zalo tự cập nhật. Không cần Node: nếu máy không có thì chạy bằng Electron của Zalo.
-// Env: ZALO_APP (thư mục cài Zalo), GLASS_JS ("blur album keys ocr pet meet drag translate"), GLASS_TRANSPARENT=1 (chỉ macOS, thử nghiệm).
+// Env: ZALO_APP (thư mục cài Zalo), GLASS_JS ("blur album keys ocr pet meet drag translate live"), GLASS_TRANSPARENT=1 (chỉ macOS, thử nghiệm).
 import { spawnSync, execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -79,7 +79,7 @@ const dark = (f) => read(f).replace(/^body \{/gm, "body.dark {");
 // tách 2 file: theme (đổi màu Zalo, templates.js tắt được để về giao diện Zalo gốc) và tính năng (menu, pet, OCR, dịch…, luôn bật)
 const themeCss = [dark("dark-base.css"), dark("glass.css"), read("glass-light.css"), process.env.GLASS_TRANSPARENT === "1" && MAC ? read("transparent.css") : ""].join("\n");
 const css = ["blur", "album", "ocr", "pet", "translate"].map((n) => read(n + ".css")).join("\n");
-const js = ["templates", ...(process.env.GLASS_JS || "blur album keys ocr pet meet drag translate").split(/\s+/)].map((j) => read(j + ".js")).join("\n");
+const js = ["templates", ...(process.env.GLASS_JS || "blur album keys ocr pet meet drag translate live").split(/\s+/)].map((j) => read(j + ".js")).join("\n");
 // connect-src thêm 127.0.0.1:47831 cho OCR (ocr-main.js)
 const inject = (b) => b && b.toString().replace("</head>", '<link rel="stylesheet" href="zalo-glass-theme.css"><link rel="stylesheet" href="zalo-glass.css"><script src="zalo-glass.js" defer></script></head>').replace("connect-src 'self'", "connect-src 'self' http://127.0.0.1:47831");
 

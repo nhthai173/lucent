@@ -125,6 +125,10 @@ Tính năng mặc định tắt trên mọi máy: bật trong bảng tuỳ chọ
 - Trên macOS với công cụ Apple, helper dịch chạy nền để chỉ nạp model một lần (lần dịch đầu ~3 giây, các lần sau ~0,5 giây, ~20 MB RAM và 0% CPU khi nhàn rỗi). Mặc định giữ 30 phút sau lần dịch cuối rồi tự thoát; chỉnh số phút trong bảng tuỳ chọn (0 = thoát ngay sau mỗi lần, đổi có tác dụng ngay).
 - Bản dịch cũng bị che khi bật "Nội dung tin nhắn" trong phần Ẩn trong hội thoại.
 
+### Dịch khi soạn tin (live translate)
+
+Nút dịch nằm ngay sau nút định dạng chữ (Aa) trên thanh công cụ của ô soạn, hiện khi đã bật "Dịch tin nhắn". Bấm để mở khung dịch dưới ô soạn, kiểu Google Translate: ô soạn của Zalo giữ nguyên là ngôn ngữ gốc, bản dịch cập nhật trực tiếp bên dưới khi bạn gõ (chờ ~0,5 giây sau lần gõ cuối). Chọn ngôn ngữ đích ở ô chọn, nút ⇄ đảo giữa Tiếng Việt và English (ngôn ngữ gốc tự nhận). @mention và emoji không đi qua bản dịch mà được ghép lại nguyên vẹn. Bấm "Dùng bản dịch" để thay nội dung ô soạn bằng bản dịch rồi gửi như thường (Enter). Bản nháp không được lưu vào lịch sử dịch.
+
 ### Album, phím tắt
 
 | Tính năng | Cách dùng |
