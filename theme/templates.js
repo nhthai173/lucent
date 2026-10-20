@@ -79,6 +79,8 @@
   const BUNNY_EARS = (p) => `<rect x="10.5" y="-7" width="7" height="19" rx="3.5" fill="${p.fur}"/><rect x="22.5" y="-7" width="7" height="19" rx="3.5" fill="${p.fur}"/>
         <rect x="12.2" y="-4" width="3.6" height="13" rx="1.8" fill="${p.inner}"/><rect x="24.2" y="-4" width="3.6" height="13" rx="1.8" fill="${p.inner}"/>`;
   const STRIPES = (p) => `<path d="M17 11 v3 M20 10.4 v3.6 M23 11 v3" stroke="${p.dark}" stroke-width="1.5" stroke-linecap="round"/>`;
+  const SHARK_FIN = (p) => `<path d="M14 12 Q16.5 3 25 -1 Q23 5 26 12Z" fill="${p.dark}" stroke="${p.dark}" stroke-width="1.6" stroke-linejoin="round"/>`;
+  const GILLS = (p) => `<path d="M31 17.5 q1.6 1.6 0 3.4 M33 16.8 q1.8 2.3 0 4.8 M35 17.5 q1.4 1.6 0 3.4" fill="none" stroke="${p.dark}" stroke-width="1" stroke-linecap="round"/>`;
   // ponytail: gag (CSS đạo cụ) dùng chung; mỗi pet chỉ đổi lời thoại. Muốn gag riêng thì thêm css + tên mới vào gags của pet đó.
   const GAGS = {
     zap: [3200, ["Chích điện cho tỉnh nè ⚡", "Bzzzt! Dậy làm việc đi ⚡", "Chích điện tự thức tỉnh: KPI +1 ⚡"]],
@@ -249,6 +251,13 @@
       intro: "Bông tới rồi nè, mang theo cà rốt 🥕",
       lines: ["Nhảy một cái cho tỉnh táo nào 🐰", "Cà rốt là động lực, deadline là… cà rốt hết hạn", "Bông không trốn việc, Bông chỉ nhảy đi chỗ khác thôi", "Nhắn lại người ta đi, đừng để họ chờ như cà rốt héo",
         "Uống nước nha, Bông nhắc đó 💧", "Làm tí nghỉ tí, sống lâu như thỏ (tầm 10 năm)", "Tai Bông nghe hết, nhưng Bông giả vờ không nghe 🙉", "Ăn rau chưa? Chưa thì ăn đi 🥬"] }),
+    map: fill("Mập", { fur: "#c9ced6", dark: "#9aa1ad", belly: "#f6f7f9", inner: "#ffffff", cheek: "#ffb3c1", ears: SHARK_FIN, mark: GILLS }, {
+      intro: "Mập bơi tới rồi, cứ thong thả thôi 🦈",
+      lines: ["Cứ thong thả, deadline cũng biết bơi mà 🌊", "Mập nhắm mắt cho đỡ thấy KPI 😌", "Hít sâu… thở ra… nhắn tin tiếp 🫧", "Việc nhiều thì cứ bơi, đừng chìm là được",
+        "Mập hiền lắm, chỉ cắn deadline thôi 🦈", "Sếp nhắn gấp? Mập vẫn bơi chậm rãi 🐢", "Uống nước đi, cá còn cần nước huống chi bạn 💧", "Ngày xấu thì cũng chỉ là một con sóng 🌊",
+        "Bạn làm tốt rồi, nghỉ tí cho Mập ngắm 😊", "Đói thì ăn, mệt thì nghỉ, Mập thấy vậy là đủ 🍙", "Mập không vội, Mập có cả đại dương 🐚", "Họp xong chưa? Mập đợi bên bờ nè 🏖️"],
+      typing: ["Gõ từ từ thôi, Mập đợi được 🫧", "Viết hay đó, Mập lặng lẽ ngắm thôi 😌", "Gõ xong nhớ đọc lại nha, Mập nhắc nhẹ 🌊"],
+      mad: ["Đừng chọc nữa, Mập lặn đây 🫧", "Mập hiền nhưng cũng biết giận nha 🦈", "Thôi mà… Mập đi bơi chỗ khác đây 🌊"] }),
     luffygear5: {
       name: "Luffy Gear 5", svg: LUFFY_GEARS, css: LUFFY_GEARS_CSS, forms: LUFFY_FORMS,
       intro: "Gear 5 tới rồi, cười lên nào! ☁️",
