@@ -73,6 +73,7 @@
         <path class="zp-tear" d="M11.6 23 q-1.4 2.6 0 3.2 q1.4 -.6 0 -3.2z"/><path class="zp-tear zp-t2" d="M28.4 23 q-1.4 2.6 0 3.2 q1.4 -.6 0 -3.2z"/>
         <ellipse class="zp-wail" cx="20" cy="26.4" rx="2.4" ry="2.2" fill="#7a2a2a"/>
       </g>
+      ${SEA}
     ` });
   const CAT_EARS = (p) => `<path d="M8.5 15 L10.5 3.5 L18.5 12Z M31.5 15 L29.5 3.5 L21.5 12Z" fill="${p.fur}" stroke="${p.fur}" stroke-width="2" stroke-linejoin="round"/>
         <path d="M11.2 11.5 L11.8 7 L15 10.4Z M28.8 11.5 L28.2 7 L25 10.4Z" fill="${p.inner}"/>`;
@@ -91,6 +92,26 @@
   };
   const TYPING = ["Ồ, đang gõ gì đó… gõ nhanh coi, mình đói", "Viết gì mà dài thế 😳 báo cáo hay tâm sự?", "Mình không nhìn trộm đâu, thề! (nhìn chằm chằm)", "Gõ đi gõ đi, mình đợi, mình có cả ngày 🍿", "Gõ rồi xoá, gõ rồi xoá… biết rồi nha 🤭"];
   const MAD = ["Thôi nha! Mình giận á 😾", "Chọc nữa là mình nghỉ việc đó!", "Hứ! Mình đi nộp đơn xin nghỉ đây", "Đủ rồi, mình lên HR báo cáo bạn 📋"];
+  // Mập: sóng biển (gag riêng surf/dive/tide). Sóng là 2 lớp path chu kỳ 12 đơn vị, trượt đúng 1 chu kỳ để lặp liền mạch.
+  const WAVE = (y) => `M-20 ${y} q3 -3 6 0${" t6 0".repeat(13)} L60 42 L-20 42Z`;
+  const SEA = `<g class="zp-prop zp-sea"><path class="zp-wv zp-wv2" d="${WAVE(27)}" fill="#8fdcff" fill-opacity=".7"/><path class="zp-wv" d="${WAVE(30)}" fill="#3aa6e0" fill-opacity=".8"/>
+        <g fill="none" stroke="#d8f4ff" stroke-width=".7"><circle class="zp-bub" cx="9" cy="30" r="1.4"/><circle class="zp-bub zp-bub2" cx="19" cy="31" r="1"/><circle class="zp-bub zp-bub3" cx="30" cy="30" r="1.6"/></g></g>`;
+  const SEA_CSS = `
+#zg-pet.zp-g-surf .zp-sea, #zg-pet.zp-g-dive .zp-sea, #zg-pet.zp-g-tide .zp-sea { display: inline; }
+#zg-pet.zp-gag.zp-g-surf .zp-happy, #zg-pet.zp-g-dive .zp-sleep, #zg-pet.zp-g-tide .zp-sleep { display: inline; }
+.zp-bub { display: none; }
+#zg-pet.zp-g-dive .zp-bub { display: inline; animation: zp-bub 1.3s ease-in infinite; }
+#zg-pet.zp-g-dive .zp-bub2 { animation-delay: -.45s; } #zg-pet.zp-g-dive .zp-bub3 { animation-delay: -.9s; }
+@keyframes zp-bub { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-16px); opacity: 0; } }
+#zg-pet.zp-gag .zp-wv { animation: zp-wvx .9s linear infinite; }
+#zg-pet.zp-gag .zp-wv2 { animation-duration: 1.5s; animation-direction: reverse; }
+@keyframes zp-wvx { to { transform: translateX(-12px); } }
+#zg-pet.zp-g-surf .zp-body { animation: zp-swell 1.2s ease-in-out infinite alternate; }
+@keyframes zp-swell { from { transform: translateY(-2.5px) rotate(-5deg); } to { transform: translateY(1px) rotate(5deg); } }
+#zg-pet.zp-g-dive .zp-body { animation: zp-dive 4.2s ease-in-out forwards; }
+@keyframes zp-dive { 0%, 100% { transform: translateY(0); } 25%, 75% { transform: translateY(7px); } }
+#zg-pet.zp-g-tide .zp-sea { transform-origin: 50% 100%; animation: zp-tide 3.6s ease-in-out forwards; }
+@keyframes zp-tide { 0%, 100% { transform: scaleY(.5); } 45%, 60% { transform: scaleY(2.2); } }`;
   const fill = (n, p, l) => ({ ...animal(p), name: n, typing: TYPING, mad: MAD, gags: GAGS, ...l });
 
   // Màu nhân vật giữ riêng để nhận ra áo đỏ, mũ rơm và Haki trên mọi theme.
@@ -252,6 +273,11 @@
       lines: ["Nhảy một cái cho tỉnh táo nào 🐰", "Cà rốt là động lực, deadline là… cà rốt hết hạn", "Bông không trốn việc, Bông chỉ nhảy đi chỗ khác thôi", "Nhắn lại người ta đi, đừng để họ chờ như cà rốt héo",
         "Uống nước nha, Bông nhắc đó 💧", "Làm tí nghỉ tí, sống lâu như thỏ (tầm 10 năm)", "Tai Bông nghe hết, nhưng Bông giả vờ không nghe 🙉", "Ăn rau chưa? Chưa thì ăn đi 🥬"] }),
     map: fill("Mập", { fur: "#c9ced6", dark: "#9aa1ad", belly: "#f6f7f9", inner: "#ffffff", cheek: "#ffb3c1", ears: SHARK_FIN, mark: GILLS }, {
+      css: SEA_CSS,
+      gags: { ...GAGS,
+        surf: [3600, ["Lướt sóng thôi, deadline để mai 🏄", "Sóng lên thì Mập lên, đơn giản vậy 🌊", "Lướt nhẹ qua đống tin nhắn nè 🏄"]],
+        dive: [4200, ["Mập lặn xuống trốn họp tí 🫧", "Dưới này yên tĩnh, không ai nhắn gấp 🤿", "Bong bóng… bong bóng… 🫧"]],
+        tide: [3600, ["Triều dâng rồi, việc trôi hết đi 🌊", "Sóng thần mini, an toàn mà 🌊", "Ào một cái, sạch inbox! 🌊"]] },
       intro: "Mập bơi tới rồi, cứ thong thả thôi 🦈",
       lines: ["Cứ thong thả, deadline cũng biết bơi mà 🌊", "Mập nhắm mắt cho đỡ thấy KPI 😌", "Hít sâu… thở ra… nhắn tin tiếp 🫧", "Việc nhiều thì cứ bơi, đừng chìm là được",
         "Mập hiền lắm, chỉ cắn deadline thôi 🦈", "Sếp nhắn gấp? Mập vẫn bơi chậm rãi 🐢", "Uống nước đi, cá còn cần nước huống chi bạn 💧", "Ngày xấu thì cũng chỉ là một con sóng 🌊",
