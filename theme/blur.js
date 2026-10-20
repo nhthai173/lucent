@@ -13,6 +13,7 @@
     theme: ICON('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/>'),
     tr: ICON('<path d="M4 5h9M8.5 3v2M6 5c0 4 3 7 6 8M12 5c-1 4-4 7-8 8M13 20l4-9 4 9M14.5 17h5"/>'),
     perf: ICON('<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>'),
+    bell: ICON('<path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 20a2 2 0 004 0"/>'),
   };
   const GROUPS = [
     ["Ẩn trong danh sách hội thoại", I.list, [["msg", "Tin nhắn"], ["name", "Tên"], ["avatar", "Ảnh đại diện"]]],
@@ -47,13 +48,17 @@
 
   // Nhóm "Hiệu năng": đọc/ghi qua server localhost ở main process (ocr-main.js ↔ opts-main.js), áp dụng khi mở lại Zalo
   const PERF = [["ram", "Giảm RAM (low-end mode)"], ["noUpdate", "Tắt tự cập nhật"], ["throttle", "Giảm tải khi ẩn / thu nhỏ"], ["lazyNoti", "Hoãn nạp cửa sổ thông báo", "Chỉ liên quan tới cửa sổ thông báo riêng của Zalo trên Windows/Linux: hoãn nạp có thể làm thông báo đầu tiên bị trễ hoặc mất nội dung, nên không bật ở đó. Trên macOS Zalo dùng thông báo hệ thống nên mục này gần như không có tác dụng."], ["noCap", "Tắt ZaloCap (chụp màn hình)", "Khi tắt ZaloCap, Zalo không dán (paste) được ảnh/file từ clipboard vào khung chat. Cần dán ảnh/file thì đừng bật mục này."], ["noCall", "Tắt ZaloCall (gọi thoại / video)"]];
+  // Nhóm "Thông báo": cùng server /config nhưng main process đọc lại file mỗi lần báo tin nên áp dụng ngay, không cần mở lại Zalo
+  const NOTI = [["noNoti", "Tắt thông báo tin nhắn", "Không hiện banner/popup khi có tin mới (badge và nảy icon vẫn chạy; âm báo do cài đặt âm thanh của Zalo quyết định)."],
+    ["notiFocus", "Báo tin cả khi đang mở Zalo", "Mặc định Zalo bỏ qua thông báo khi bạn đang ở trong cửa sổ Zalo. Bật mục này để vẫn báo."],
+    ["hideNoti", "Ẩn nội dung thông báo", "Banner chỉ ghi \"Bạn có tin nhắn mới\", không hiện tên, nội dung và ảnh đại diện (áp dụng cho thông báo hệ thống lẫn popup của Zalo)."]];
   const API = "http://127.0.0.1:47831/config";
   const sech = (icon, title) => { const h = document.createElement("div"); h.className = "zg-h"; h.innerHTML = icon; h.append(title); return h; };
-  const perf = async () => {
+  const cfgBox = async (icon, title, list, restart) => {
     try {
       const cfg = await (await fetch(API)).json(), box = document.createElement("section");
-      box.append(sech(I.perf, "Hiệu năng"));
-      PERF.forEach(([k, label, tip]) => {
+      box.append(sech(icon, title));
+      list.forEach(([k, label, tip]) => {
         const l = document.createElement("label");
         l.innerHTML = `<span>${label}</span><input type="checkbox">`;
         if (tip) { // (i) rê chuột / bấm để xem giải thích
@@ -62,12 +67,13 @@
           l.firstChild.append(i);
         }
         const c = l.lastChild; c.checked = !!cfg[k];
-        c.onchange = () => { fetch(`${API}?set=${k}&v=${+c.checked}`).catch(() => {}); foot.classList.add("dirty"); };
+        c.onchange = () => { fetch(`${API}?set=${k}&v=${+c.checked}`).catch(() => {}); if (restart) foot.classList.add("dirty"); };
         box.append(l);
       });
       body.append(box); foot.hidden = false;
     } catch {} // server chưa chạy / viewer không có → bỏ nhóm
   };
+  const perf = () => cfgBox(I.perf, "Hiệu năng", PERF, true), noti = () => cfgBox(I.bell, "Thông báo", NOTI, false);
 
   // thẻ chọn template có preview (kiểu chọn giao diện của Zalo): theme vẽ khung mini bằng chính biến màu của theme, pet vẽ sprite
   const preview = (kind, k) => {
@@ -149,7 +155,7 @@
       });
       body.append(sec);
     });
-    perf();
+    noti().then(perf);
     document.body.append(menu);
     menu.addEventListener("mousedown", (e) => { if (e.target === menu) menu.classList.remove("open"); }); // bấm nền mờ để đóng
     addEventListener("keydown", (e) => { if (e.key === "Escape" && menu.classList.contains("open")) { menu.classList.remove("open"); e.stopPropagation(); } }, true);

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Cài / gỡ theme Glass cho Zalo PC (macOS, Windows, Linux) theo cách ZaDark: chèn CSS+JS vào pc-dist/index.html trong app.asar.
 //   ./install.sh | install.ps1 [--uninstall]   Chạy lại sau mỗi lần Zalo tự cập nhật. Không cần Node: nếu máy không có thì chạy bằng Electron của Zalo.
-// Env: ZALO_APP (thư mục cài Zalo), GLASS_JS ("blur album keys ocr pet meet drag translate live"), GLASS_TRANSPARENT=1 (chỉ macOS, thử nghiệm).
+// Env: ZALO_APP (thư mục cài Zalo), GLASS_JS ("blur album keys ocr pet meet drag translate live noti"), GLASS_TRANSPARENT=1 (chỉ macOS, thử nghiệm).
 import { spawnSync, execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -79,7 +79,7 @@ const dark = (f) => read(f).replace(/^body \{/gm, "body.dark {");
 // tách 2 file: theme (đổi màu Zalo, templates.js tắt được để về giao diện Zalo gốc) và tính năng (menu, pet, OCR, dịch…, luôn bật)
 const themeCss = [dark("dark-base.css"), dark("glass.css"), read("glass-light.css"), process.env.GLASS_TRANSPARENT === "1" && MAC ? read("transparent.css") : ""].join("\n");
 const css = ["blur", "album", "ocr", "pet", "translate"].map((n) => read(n + ".css")).join("\n");
-const js = ["templates", ...(process.env.GLASS_JS || "blur album keys ocr pet meet drag translate live").split(/\s+/)].map((j) => read(j + ".js")).join("\n");
+const js = ["templates", ...(process.env.GLASS_JS || "blur album keys ocr pet meet drag translate live noti").split(/\s+/)].map((j) => read(j + ".js")).join("\n");
 // connect-src thêm 127.0.0.1:47831 cho OCR (ocr-main.js)
 const inject = (b) => b && b.toString().replace("</head>", '<link rel="stylesheet" href="zalo-glass-theme.css"><link rel="stylesheet" href="zalo-glass.css"><script src="zalo-glass.js" defer></script></head>').replace("connect-src 'self'", "connect-src 'self' http://127.0.0.1:47831");
 
@@ -98,14 +98,21 @@ const pre = read("opts-main.js") + "\n" + read("translate-main.js") + "\n" + rea
 const edits = { "pc-dist/zalo-glass-theme.css": () => themeCss, "pc-dist/zalo-glass.css": () => css, "pc-dist/zalo-glass.js": () => js, "bootstrap.js": (b) => pre + b, "pc-dist/index.html": inject };
 // Zalo có sẵn FPS monitor (chunk lazy) chạy 2 vòng requestAnimationFrame ~100 lần/giây khi cờ enable_fps_monitor bật → compositor/GPU không bao giờ ngủ. Đổi tên cờ để nó luôn tắt.
 // Lỗi của Zalo: className thanh nav ghép `(showChat?" show-chat":"")+(update?"show-update-btn":"")` thiếu dấu cách → khi có nút cập nhật, "show-chat" thành "show-chatshow-update-btn" và ở chế độ hẹp bấm hội thoại không mở được chat. Thêm dấu cách + thêm showChat vào deps của useMemo.
+// Lỗi của Zalo: "đang dùng app" lấy từ ifvisible (bật lại khi chuột lướt qua cửa sổ dù không focus, tắt sau ~30 s) → tin tới lúc đó không báo, không nảy Dock. Ép thêm document.hasFocus() cho badge/bounce và thông báo (noti.js ghi lệch vào noti.log)
+const actFix = (t) => t.replace(/\(this\.focusDetector\|\|([a-z])\.b\)\.isActive\(\)/g, "(window.__zgActive||(a=>a))((this.focusDetector||$1.b).isActive())").replace(/return ([a-z]+)\.b\.isActive\(\)\}_getConversationInfoForNotification/g, "return (window.__zgActive||(a=>a))($1.b.isActive())}_getConversationInfoForNotification");
 const navFix = (t) => t.replace(/\(([a-z])\?"show-update-btn":""\)\+\(([a-z])\?"show-update-btn":""\)\}\),\[([a-z])\.compactLv,/g, '($1?" show-update-btn":"")+($2?" show-update-btn":"")}),[$3.showChat,$3.compactLv,');
-edits["pc-dist/lazy/*.js"] = (b) => { if (!b) return false; let t = b.toString(); if (t.includes("enable_fps_monitor")) t = t.replace(/\.(enable_fps_monitor(?:_v2)?|enable_for_staging_account)/g, ".zg_off_$1"); t = navFix(t); return t !== b.toString() && t; };
+edits["pc-dist/lazy/*.js"] = (b) => { if (!b) return false; let t = b.toString(); if (t.includes("enable_fps_monitor")) t = t.replace(/\.(enable_fps_monitor(?:_v2)?|enable_for_staging_account)/g, ".zg_off_$1"); t = actFix(navFix(t)); return t !== b.toString() && t; };
 edits["pc-dist/compact-app-pc.*.js"] = (b) => { if (!b) return false; const t = navFix(b.toString()); return t !== b.toString() && t; };
 edits["pc-dist/popup-viewer.html"] = inject; // bản Zalo không có file này thì bỏ qua
 const hash = patchAsar(path.join(BACKUP, "app.asar"), ASAR, edits); // luôn build từ backup
 if (MAC) { // ElectronAsarIntegrity = sha256 của chuỗi JSON header trong asar
   execFileSync("/usr/libexec/PlistBuddy", ["-c", `Set :ElectronAsarIntegrity:Resources/app.asar:hash ${hash}`, z.plist]);
   resign();
+}
+
+if (WIN) { // shortcut Start Menu cần AUMID thì toast mới hiện (xem theme/toast.ps1); lỗi thì chỉ cảnh báo
+  const r = spawnSync("powershell", ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", path.join(T, "toast.ps1"), "-Root", /^Zalo-/.test(path.basename(ROOT)) ? path.dirname(ROOT) : ROOT], { encoding: "utf8" });
+  if (r.status) console.error("Không gắn được AUMID cho shortcut Zalo:", r.stderr || r.stdout); else if (r.stdout.trim() === "set") console.log("Đã gắn AppUserModelID com.vng.zalo vào shortcut Zalo (thông báo Windows).");
 }
 
 console.log("Xong."); open();

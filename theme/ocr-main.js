@@ -39,6 +39,7 @@ try {
         const k = u.searchParams.get("set");
         return done(JSON.stringify(k ? Z.set(k, typeof Z.DEF[k] === "number" ? +u.searchParams.get("v") : u.searchParams.get("v") === "1") : Z.read()));
       }
+      if (u.pathname === "/noti") { globalThis.__zgNotiLog?.("renderer " + (u.searchParams.get("m") || "").slice(0, 200)); return done("{}"); } // nhật ký thông báo (noti.js)
       if (u.pathname === "/restart") { // menu "Khởi động lại Zalo"; chỉ POST (trang web ngoài gửi POST sẽ mang Origin http → đã bị chặn ở trên)
         if (req.method !== "POST") return fail(405, "POST only");
         done("{}"); const { app } = require("electron"); setTimeout(() => { app.relaunch(); app.exit(0); }, 200);

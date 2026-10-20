@@ -64,6 +64,8 @@ Nút con mắt ở thanh bên mở bảng tuỳ chọn: che nội dung, kiểu h
 
 ### Pet
 
+Riêng Mập có thêm ba trò sóng biển: lướt sóng, lặn xuống sủi bong bóng và sóng triều dâng ngập người.
+
 Có năm nhân vật: Mochi, Mun, Bông, Mập (cá mập) và Luffy Gear 5. Pet tự đi dạo trong vùng chat, nói vài câu ngẫu nhiên và đổi trạng thái theo cách bạn tương tác:
 
 | Trạng thái | Khi nào |
@@ -164,6 +166,20 @@ Các tuỳ chọn này nằm trong bảng tuỳ chọn, lưu ở `~/.zalo-glass/
 | Tắt ZaloCap | Bỏ chụp màn hình của Zalo. Zalo cũng không dán được ảnh hoặc file từ clipboard. |
 | Tắt ZaloCall | Bỏ gọi thoại và video. |
 
+### Thông báo tin nhắn
+
+Menu mắt có nhóm **Thông báo** (áp dụng ngay, không cần mở lại Zalo):
+
+| Tuỳ chọn | Tác dụng |
+|---|---|
+| Tắt thông báo tin nhắn | Không hiện banner/popup. Badge và nảy Dock vẫn chạy, âm báo theo cài đặt âm thanh của Zalo. |
+| Báo tin cả khi đang mở Zalo | Mặc định Zalo bỏ qua thông báo khi bạn đang ở trong cửa sổ Zalo. Bật để vẫn báo. |
+| Ẩn nội dung thông báo | Banner chỉ ghi "Bạn có tin nhắn mới", không tên, nội dung, ảnh đại diện (thông báo hệ thống lẫn popup của Zalo). |
+
+Bản vá còn sửa lỗi của Zalo: "đang dùng app" (thư viện ifvisible) bật lại mỗi khi chuột lướt qua cửa sổ dù không focus, nên tin tới lúc đó không báo và Dock không nảy. Giờ chỉ coi là đang dùng khi cửa sổ thật sự có focus.
+
+Trên Windows, `install.ps1` gắn AppUserModelID `com.vng.zalo` vào shortcut Start Menu của Zalo (thiếu nó Windows không hiện toast) và taskbar nháy khi có tin mới lúc Zalo không được chọn. Module `noti` ghi nhật ký `~/.zalo-glass/noti.log` (sự kiện thông báo, nảy Dock, kèm độ trễ; không có tên hay nội dung tin) để chẩn đoán.
+
 Lucent luôn tắt bộ đo FPS của Zalo vì nó giữ GPU hoạt động liên tục.
 
 ## Cài đặt
@@ -207,7 +223,7 @@ powershell -ExecutionPolicy Bypass -File uninstall.ps1
 | Biến | Ý nghĩa |
 |---|---|
 | `ZALO_APP` | Thư mục cài Zalo, nếu không nằm ở vị trí mặc định. |
-| `GLASS_JS` | Danh sách module JS được nạp. Mặc định `"blur album keys ocr pet meet drag translate live"`. Bỏ một tên khỏi danh sách để tắt tính năng tương ứng. Module `templates` luôn được nạp trước. |
+| `GLASS_JS` | Danh sách module JS được nạp. Mặc định `"blur album keys ocr pet meet drag translate live noti"`. Bỏ một tên khỏi danh sách để tắt tính năng tương ứng. Module `templates` luôn được nạp trước. |
 | `GLASS_TRANSPARENT=1` | Cửa sổ trong suốt. Chỉ macOS, thử nghiệm. |
 
 Ví dụ, chỉ cài theme và tính năng che nội dung:
