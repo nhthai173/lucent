@@ -12,6 +12,7 @@ How the pet moves and how to add a new "gag" (a short comedy scene such as zap, 
 | `zp-asleep` | `sleep(true)` after 60 s without input | swap to `.zp-sleep` eyes, slow breathing |
 | `zp-mad` | 5 clicks, each less than 4 s after the previous | red-ish filter, fast tail; pet runs to the other end |
 | `zp-gag` + `zp-g-<name>` | `gag(name)` | the gag scene (see below) |
+| `zp-drag` | `pointerdown`/`pointermove` trên sprite (kéo quá 5 px) | pet đang bị cầm: nghiêng, con trỏ `grabbing`. Khi cầm `dragging` và `busy` chặn `tick()` và hành vi nhàn rỗi; thả ra thì `pet.animate` rơi về thanh (`region()`), click ngay sau khi kéo bị bỏ qua |
 | `zp-big` | big mode | scaled to window centre; pointer events disabled |
 | `zp-anim` | `run()` | enables CSS transitions on `transform/top/width/height` for the move-and-scale effect |
 | `zp-in` | `tick()` when the region changes | fade-in |

@@ -64,11 +64,12 @@ Nút con mắt ở thanh bên mở bảng tuỳ chọn: che nội dung, kiểu h
 
 ### Pet
 
-Có bốn nhân vật: Mochi, Mun, Bông và Luffy Gear 5. Pet tự đi dạo trong vùng chat, nói vài câu ngẫu nhiên và đổi trạng thái theo cách bạn tương tác:
+Có năm nhân vật: Mochi, Mun, Bông, Mập (cá mập) và Luffy Gear 5. Pet tự đi dạo trong vùng chat, nói vài câu ngẫu nhiên và đổi trạng thái theo cách bạn tương tác:
 
 | Trạng thái | Khi nào |
 |---|---|
 | Vui | Rê chuột vào pet |
+| Bị bế | Giữ chuột kéo pet đi đâu cũng được; thả ra thì pet rơi xuống thanh ngay vị trí đó |
 | Ngủ | Sau 60 giây không thao tác |
 | Nổi giận | Bấm 5 lần trong 4 giây |
 | Diễn trò (chích điện, súng nước, thở oxy, khóc, ngất) | Ngẫu nhiên, hoặc khi bấm vào pet |

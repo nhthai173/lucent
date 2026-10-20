@@ -42,7 +42,7 @@
     return !document.querySelector("#chatViewContainer:hover, .conv-item:hover, .zg-msg-focus, #zg-menu.open") && !document.activeElement?.closest?.(".rich-input");
   };
   const GROW_DELAY = 800, SHRINK_DELAY = 150, ANIM = 900; // chờ trạng thái ổn định rồi mới đổi (hết giật); Mochi chạy ANIM ms
-  let anim = false, since = 0, smallX = 0;
+  let anim = false, since = 0, smallX = 0, dragging = false;
   const bigK = () => Math.min((innerHeight * .5) / H, (innerWidth * .7) / W);
   const placeBig = (k = bigK()) => {
     pet.style.top = (innerHeight - H * k) / 2 + "px"; pet.style.transform = `translateX(${(innerWidth - W * k) / 2}px)`;
@@ -100,7 +100,7 @@
       anim = false; since = 0; reg = null; set("zp-anim", false); set("zp-walk", false); bubble.classList.remove("zp-show");
       pet.style.display = "none"; return;
     }
-    if (anim) return;
+    if (anim || dragging) return;
     if (hiding() === big) since = 0;
     else if (!since) since = Date.now();
     else if (Date.now() - since >= (big ? SHRINK_DELAY : GROW_DELAY)) { since = 0; setBig(!big); return; }
@@ -200,6 +200,7 @@
   // chọc
   let pokes = 0, pokeT = 0;
   sprite.addEventListener("click", async (e) => {
+    if (justDragged) return;
     if (T.forms?.length > 1) {
       if (anim || document.hidden || !document.hasFocus()) return;
       activity();
@@ -217,6 +218,33 @@
       await wait(2500); set("zp-mad", false); busy = false;
     } else if (Math.random() < .5) gag();
     else { hop(); say(pick(T.lines)); }
+  });
+  // kéo thả: cầm pet đi khắp cửa sổ, thả ra thì rơi xuống thanh ở đúng vị trí ngang đó (không lưu gì)
+  let justDragged = false;
+  sprite.addEventListener("pointerdown", (e) => {
+    if (e.button || big || anim || !reg) return;
+    const r = pet.getBoundingClientRect(), ox = e.clientX - r.left, oy = e.clientY - r.top, sx = e.clientX, sy = e.clientY;
+    let held = false;
+    const at = (ev) => [Math.max(0, Math.min(innerWidth - W, ev.clientX - ox)), Math.max(0, Math.min(innerHeight - H, ev.clientY - oy))];
+    const move = (ev) => {
+      if (!held) {
+        if (Math.hypot(ev.clientX - sx, ev.clientY - sy) < 5) return;
+        held = dragging = busy = true; cancelGag(); busy = true; cancelMorph(); set("zp-drag", true); set("zp-joy", true);
+        bubble.classList.remove("zp-show"); pet.style.transition = "none"; sprite.setPointerCapture(e.pointerId);
+      }
+      const [l, t] = at(ev); pet.style.top = t + "px"; pet.style.transform = `translateX(${l}px)`;
+    };
+    const up = () => {
+      sprite.removeEventListener("pointermove", move); sprite.removeEventListener("pointerup", up); sprite.removeEventListener("pointercancel", up);
+      if (!held) return;
+      justDragged = true; setTimeout(() => (justDragged = false), 0);
+      const n = region() || reg, from = { top: pet.style.top, transform: pet.style.transform };
+      reg = n; x = Math.max(n.min, Math.min(n.max, parseFloat(pet.style.transform.slice(11)) || x));
+      pet.style.top = n.y - H + "px"; pet.style.transform = `translateX(${x}px)`; set("zp-drag", false); set("zp-joy", false);
+      const to = { top: pet.style.top, transform: pet.style.transform };
+      pet.animate([from, to], { duration: 320, easing: "cubic-bezier(.5,0,1,.6)" }).onfinish = () => { dragging = false; busy = false; hop(); };
+    };
+    sprite.addEventListener("pointermove", move); sprite.addEventListener("pointerup", up); sprite.addEventListener("pointercancel", up);
   });
   sprite.addEventListener("mouseenter", () => set("zp-joy", true));
   sprite.addEventListener("mouseleave", () => set("zp-joy", false));

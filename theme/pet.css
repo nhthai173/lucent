@@ -97,3 +97,7 @@ html:has(body.dark) .zp-bubble { color: #eef0f8; background: rgba(14, 16, 32, .8
 .zp-sprite { transition: transform .25s cubic-bezier(.5, 0, .5, 1.4); transform-origin: 50% 100%; }
 #zg-pet.zp-g-faint .zp-sprite { transform: translateY(-18px) rotate(88deg); }
 #zg-pet.zp-g-faint .zp-tail, #zg-pet.zp-g-faint .zp-body { animation: none; }
+
+/* kéo thả: đang cầm thì chân đạp lơ lửng, con trỏ nắm tay */
+#zg-pet.zp-drag .zp-hop { cursor: grabbing; }
+#zg-pet.zp-drag .zp-sprite { transform: rotate(-8deg); transform-origin: 50% 0; }
