@@ -44,12 +44,12 @@
         <rect x="5" y="10" width="30" height="22" rx="11" fill="${p.fur}"/>
         <ellipse cx="20" cy="28" rx="9" ry="4.6" fill="${p.belly}"/>
         ${p.mark(p)}
-        <g class="zp-eyes zp-open">${eye(14)}${eye(26)}</g>
+        <g${p.ey ? ` transform="translate(0 ${p.ey})"` : ""}><g class="zp-eyes zp-open">${eye(14)}${p.wink ? arc(26, 21.5) : eye(26)}</g>
         <g class="zp-eyes zp-happy">${arc(14, 22)}${arc(26, 22)}</g>
         <g class="zp-eyes zp-x"><path d="M11.8 19.2 l4.4 4.4 M16.2 19.2 l-4.4 4.4 M23.8 19.2 l4.4 4.4 M28.2 19.2 l-4.4 4.4" stroke="#2b2118" stroke-width="1.6" stroke-linecap="round"/></g>
-        <g class="zp-eyes zp-sleep"><path d="M11.4 21.5 h5.2 M23.4 21.5 h5.2" stroke="#2b2118" stroke-width="1.6" stroke-linecap="round"/></g>
-        <ellipse cx="9.6" cy="25.2" rx="2.6" ry="1.6" fill="${p.cheek}" opacity=".55"/><ellipse cx="30.4" cy="25.2" rx="2.6" ry="1.6" fill="${p.cheek}" opacity=".55"/>
-        <path d="M18 24.6 q1 1.3 2 0 q1 1.3 2 0" fill="none" stroke="#2b2118" stroke-width="1.1" stroke-linecap="round"/>
+        <g class="zp-eyes zp-sleep"><path d="M11.4 21.5 h5.2 M23.4 21.5 h5.2" stroke="#2b2118" stroke-width="1.6" stroke-linecap="round"/></g></g>
+        ${p.snout ? "" : `<ellipse cx="9.6" cy="25.2" rx="2.6" ry="1.6" fill="${p.cheek}" opacity=".55"/><ellipse cx="30.4" cy="25.2" rx="2.6" ry="1.6" fill="${p.cheek}" opacity=".55"/>`}
+        ${p.snout ? "" : '<path d="M18 24.6 q1 1.3 2 0 q1 1.3 2 0" fill="none" stroke="#2b2118" stroke-width="1.1" stroke-linecap="round"/>'}
       </g>
       <g class="zp-prop zp-p-zap">
         <rect x="31" y="22" width="5.4" height="11" rx="1.4" fill="#2a2a30"/><rect x="32" y="24.2" width="3.4" height="2.2" rx=".6" fill="#6cf"/>
@@ -73,7 +73,7 @@
         <path class="zp-tear" d="M11.6 23 q-1.4 2.6 0 3.2 q1.4 -.6 0 -3.2z"/><path class="zp-tear zp-t2" d="M28.4 23 q-1.4 2.6 0 3.2 q1.4 -.6 0 -3.2z"/>
         <ellipse class="zp-wail" cx="20" cy="26.4" rx="2.4" ry="2.2" fill="#7a2a2a"/>
       </g>
-      ${SEA}
+      ${SEA}${p.extra || ""}
     ` });
   const CAT_EARS = (p) => `<path d="M8.5 15 L10.5 3.5 L18.5 12Z M31.5 15 L29.5 3.5 L21.5 12Z" fill="${p.fur}" stroke="${p.fur}" stroke-width="2" stroke-linejoin="round"/>
         <path d="M11.2 11.5 L11.8 7 L15 10.4Z M28.8 11.5 L28.2 7 L25 10.4Z" fill="${p.inner}"/>`;
@@ -112,6 +112,50 @@
 @keyframes zp-dive { 0%, 100% { transform: translateY(0); } 25%, 75% { transform: translateY(7px); } }
 #zg-pet.zp-g-tide .zp-sea { transform-origin: 50% 100%; animation: zp-tide 3.6s ease-in-out forwards; }
 @keyframes zp-tide { 0%, 100% { transform: scaleY(.5); } 45%, 60% { transform: scaleY(2.2); } }`;
+  // Bò Sữa: tượng bò trắng đốm đen, sừng non + tai cụp, mắt nháy 1 bên, mõm cam đào to tròn và 4 trò riêng (milk/grass/bell/flood).
+  const COW_EARS = () => `<ellipse cx="7.2" cy="12.2" rx="2.8" ry="1.6" transform="rotate(-20 7.2 12.2)" fill="#f5f6fa" stroke="#d5d9e2" stroke-width=".7"/>
+        <ellipse cx="32.8" cy="12.2" rx="2.8" ry="1.6" transform="rotate(20 32.8 12.2)" fill="#f5f6fa" stroke="#d5d9e2" stroke-width=".7"/>`;
+  const COW_MARK = () => `<rect x="5" y="10" width="30" height="22" rx="11" fill="none" stroke="#dde2ec" stroke-width=".7"/>
+        <path d="M14.5 9.6 q3.8 -.5 6.8 .4 q.8 1.6 -1.8 2.1 q-3.4 .3 -5.2 -.7z M23.5 10.4 q3.5 .2 5.2 2.2 q-.8 1.6 -3.2 1.2 q-2.4 -.5 -2 -3.4z M9.5 11 q2.5 -.4 3.6 1.1 q-.9 1.5 -2.8 1.2z M6 17.5 q2.4 -.5 3 1.8 q-.4 2.2 -2.6 2z M34 17 q-2.6 -.4 -3.1 1.9 q.4 2.1 2.7 1.9z" fill="#202228"/>
+        <path d="M10.2 11.8 C8.5 6.2 9.5 4.2 11.4 4.4 C13.2 4.6 14.5 8.2 14.4 11.4Z M29.8 11.8 C31.5 6.2 30.5 4.2 28.6 4.4 C26.8 4.6 25.5 8.2 25.6 11.4Z" fill="#f3f1ec" stroke="#d6d2c9" stroke-width=".75"/>
+        <ellipse cx="11.4" cy="18.2" rx="2.3" ry="1.4" fill="#dc5e32"/><ellipse cx="28.6" cy="18.2" rx="2.3" ry="1.4" fill="#dc5e32"/>
+        <rect x="7.2" y="19.8" width="25.6" height="12.6" rx="6.3" fill="#f2ad91" stroke="#e49b7d" stroke-width=".6"/>
+        <path d="M12 21.6 q8 -1.2 16 0" fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round" opacity=".55"/>
+        <ellipse cx="15.4" cy="27.5" rx="2.5" ry="1.9" fill="#e59a7c" stroke="#d5886a" stroke-width=".5"/><ellipse cx="24.6" cy="27.5" rx="2.5" ry="1.9" fill="#e59a7c" stroke="#d5886a" stroke-width=".5"/>`;
+  const COW = `<g class="zp-prop zp-p-milk"><g class="zp-milk-box"><path d="M22 26.5 L29 20.5" stroke="#ff6b8b" stroke-width="1.4" stroke-linecap="round"/>
+        <rect x="27.5" y="19.5" width="8.5" height="11" rx="1.6" fill="#fff" stroke="#8ab4f8" stroke-width=".9"/><rect x="28.2" y="23" width="7.1" height="4.5" rx=".6" fill="#5da9ff"/>
+        <path d="M28 19.5 l4 -2.5 l4 2.5" fill="#e8f1ff" stroke="#8ab4f8" stroke-width=".8" stroke-linejoin="round"/><circle cx="34.5" cy="25.5" r="2.1" fill="#fbfcfe" stroke="#d5d9e2" stroke-width=".6"/></g>
+        <circle class="zp-milk-drop" cx="17.5" cy="27.5" r="1.1" fill="#fff"/></g>
+      <g class="zp-prop zp-p-grass"><path d="M4 35 l2 -4 l1.5 4 l2.2 -5 l1.8 5 M29 35 l1.8 -4.5 l1.6 4.5 l2.2 -3.8 l1.4 3.8" fill="none" stroke="#45c466" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <g class="zp-stem"><path d="M20 28 q6 .5 11 -3.5" fill="none" stroke="#3ebd5c" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M26 26.5 q2 -3.2 4.5 -1.8 q-1.5 2.8 -4.5 1.8z" fill="#52d66f"/><path d="M28 26 q3 .8 4.2 2.8 q-3 .8 -4.2 -2.8z" fill="#3ebd5c"/>
+          <circle cx="31.5" cy="24.1" r="2.1" fill="#ffdf4d" stroke="#fff" stroke-width=".8"/><circle cx="31.5" cy="24.1" r=".9" fill="#f59e0b"/></g></g>
+      <g class="zp-prop zp-p-bell"><path d="M9 28.5 q11 3.5 22 0" fill="none" stroke="#e04f5f" stroke-width="1.8" stroke-linecap="round"/>
+        <g class="zp-bell-g"><path d="M17.2 29.5 q2.8 -2 5.6 0 l1 4.2 h-7.6z" fill="#fbbf24" stroke="#b45309" stroke-width=".8" stroke-linejoin="round"/><circle cx="20" cy="34.2" r="1.3" fill="#d97706"/></g>
+        <g fill="none" stroke="#fbbf24" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path class="zp-note" d="M33 14 v-5 l4 -1 v5 M31.8 14.2 a1.2 1 0 1 0 2.4 0 a1.2 1 0 1 0 -2.4 0"/><path class="zp-note zp-note2" d="M4 12 v-4.5 l3.2 -.8 M2.8 12.2 a1.1 .9 0 1 0 2.2 0 a1.1 .9 0 1 0 -2.2 0"/></g></g>
+      <g class="zp-prop zp-p-flood"><path class="zp-wv zp-wv2" d="${WAVE(27)}" fill="#eef4ff" fill-opacity=".85"/><path class="zp-wv" d="${WAVE(30)}" fill="#fff" stroke="#dbe7ff" stroke-width=".6" fill-opacity=".95"/></g>`;
+  const COW_CSS = `${SEA_CSS}
+#zg-pet .zp-tears { transform: translateY(-4.5px); }
+#zg-pet.zp-g-milk .zp-p-milk, #zg-pet.zp-g-grass .zp-p-grass, #zg-pet.zp-g-bell .zp-p-bell, #zg-pet.zp-g-flood .zp-p-flood { display: inline; }
+#zg-pet.zp-gag:is(.zp-g-milk, .zp-g-grass, .zp-g-bell) .zp-happy, #zg-pet.zp-g-flood .zp-sleep { display: inline; }
+#zg-pet.zp-g-milk .zp-body { animation: zp-gulp .55s ease-in-out infinite alternate; }
+#zg-pet.zp-g-milk .zp-milk-box { transform-origin: 20% 80%; animation: zp-tilt .55s ease-in-out infinite alternate; }
+#zg-pet.zp-g-milk .zp-milk-drop { animation: zp-drip .9s ease-in infinite; }
+#zg-pet.zp-g-grass .zp-body { animation: zp-chew-b .45s ease-in-out infinite alternate; }
+#zg-pet.zp-g-grass .zp-stem { transform-origin: 0% 50%; animation: zp-chew-s .28s ease-in-out infinite alternate; }
+#zg-pet.zp-g-grass .zp-tail { animation: zp-wag .6s ease-in-out infinite; }
+#zg-pet.zp-g-bell .zp-body { animation: zp-sway .5s ease-in-out infinite alternate; }
+#zg-pet.zp-g-bell .zp-bell-g { transform-origin: 50% 0%; animation: zp-ring .25s ease-in-out infinite alternate; }
+#zg-pet.zp-g-bell .zp-note { animation: zp-note 1.2s ease-out infinite; }
+#zg-pet.zp-g-bell .zp-note2 { animation-delay: .6s; }
+#zg-pet.zp-g-flood .zp-body { animation: zp-swell 1.1s ease-in-out infinite alternate; }
+@keyframes zp-gulp { to { transform: translateY(-1.2px) scale(1.02, 1.04); } }
+@keyframes zp-tilt { from { transform: rotate(-8deg); } to { transform: rotate(-22deg) translateY(-1px); } }
+@keyframes zp-chew-b { from { transform: rotate(-1.5deg); } to { transform: translateY(1.2px) rotate(1.5deg); } }
+@keyframes zp-chew-s { from { transform: rotate(-10deg); } to { transform: rotate(14deg) translateX(-1px); } }
+@keyframes zp-sway { from { transform: rotate(-4deg); } to { transform: rotate(4deg) translateY(-1.5px); } }
+@keyframes zp-ring { from { transform: rotate(-18deg); } to { transform: rotate(18deg); } }
+@keyframes zp-note { 0% { transform: scale(.7); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(4px, -12px) scale(1.1); opacity: 0; } }`;
   const fill = (n, p, l) => ({ ...animal(p), name: n, typing: TYPING, mad: MAD, gags: GAGS, ...l });
 
   // Màu nhân vật giữ riêng để nhận ra áo đỏ, mũ rơm và Haki trên mọi theme.
@@ -284,6 +328,40 @@
         "Bạn làm tốt rồi, nghỉ tí cho Mập ngắm 😊", "Đói thì ăn, mệt thì nghỉ, Mập thấy vậy là đủ 🍙", "Mập không vội, Mập có cả đại dương 🐚", "Họp xong chưa? Mập đợi bên bờ nè 🏖️"],
       typing: ["Gõ từ từ thôi, Mập đợi được 🫧", "Viết hay đó, Mập lặng lẽ ngắm thôi 😌", "Gõ xong nhớ đọc lại nha, Mập nhắc nhẹ 🌊"],
       mad: ["Đừng chọc nữa, Mập lặn đây 🫧", "Mập hiền nhưng cũng biết giận nha 🦈", "Thôi mà… Mập đi bơi chỗ khác đây 🌊"] }),
+    bosua: fill("Bò Sữa", { fur: "#fbfcfe", dark: "#e2e6ee", belly: "#fbfcfe", inner: "#f4b196", cheek: "#dc5e32", ey: -4.5, wink: 1, snout: 1, ears: COW_EARS, mark: COW_MARK, extra: COW }, {
+      css: COW_CSS,
+      gags: {
+        zap: [3200, ["Bzzzt! Sữa tươi thanh trùng bằng điện luôn rồi ⚡", "Moooo⚡ Chích một phát tỉnh cả 4 cái dạ dày!"]],
+        gun: [4200, ["Súng bắn sữa tươi đây, đứng im cho bò xịt miếng 🔫", "Còn giao thêm việc là bò bắn tỉa bằng sữa đặc nha 💦"]],
+        oxy: [4500, ["Moooo… cho bò thở miếng oxy mùi đồng cỏ 😮‍💨", "Hết cỏ hết sữa, thở oxy cầm hơi qua ngày 🫧"]],
+        cry: [4500, ["Moooo huhu… vắt hết sạch sữa rồi còn đâu 😭", "Khóc thành dòng sữa tươi vì sếp bảo sửa lại từ đầu 😭"]],
+        faint: [3500, ["Bò xỉu ngang, đừng ai gọi dậy vắt sữa nữa 💀", "Moooo… tắt máy, bò về đồng cỏ trong mơ đây 💤"]],
+        milk: [3800, ["Tự làm tự uống, sữa tươi nguyên chất 100% 🥛", "Nạp canxi để gánh team không gãy lưng 🍼", "Uống miếng sữa cho cao lớn qua kỳ review 🥛"]],
+        grass: [4000, ["Bò chỉ biết ăn cỏ, bò không biết KPI là gì 🌿", "Gặm miếng cỏ non, kệ dòng đời xô đẩy 🌱", "Nhai kỹ no lâu, deadline để mai tính 🌿"]],
+        bell: [3600, ["Mòooo~ tan ca chưa cho bò về chuồng 🔔", "Leng keng leng keng, giờ nghỉ giải lao tới rồi 🎶", "Lắc chuông gọi đồng đội đi uống trà sữa 🔔"]],
+        flood: [3800, ["Bơi trong biển sữa, trôi sạch mọi muộn phiền 🍼", "Sữa tràn bờ đê, việc trôi về nơi xa 🥛", "Ngâm mình trong sữa tươi cho dịu lại tâm hồn 🐮"]] },
+      intro: "Moooo~ Bò Sữa tới rồi, uống miếng sữa rồi chạy task tiếp 🐮",
+      lines: [
+        "Moooo… (dịch: bao giờ mới tới kỳ lương) 🐮", "Mòooo~ tiếng kêu của bò đang bị deadline dí 🐮",
+        "Bò có 4 cái dạ dày mà vẫn không tiêu hoá nổi đống task này 🌿", "Người ta vắt sữa bò, còn công ty vắt kiệt sức mình 🥛",
+        "Bò chỉ biết gặm cỏ, đừng hỏi bò chuyện KPI 🌿", "Uống hộp sữa cho vững tâm lý trước giờ họp 🥛",
+        "Sếp gọi hả? Bò đang bận… nhai lại task cũ rồi 🌱", "Tự sản xuất sữa, tự uống, tự gánh còng lưng 🍼",
+        "Đốm đen trên lưng bò hay là vết thâm vì thức khuya chạy việc? 🐾", "Moooo… người ta nghe nhạc, bò nghe tiếng ting ting Zalo 🔔",
+        "Đồng cỏ xanh mướt mà lòng bò đầy bảng lương 🌾", "Nhắn tin từ từ thôi, bò nhai chưa kịp nuốt 🐮",
+        "Mắt nháy một bên không phải điệu, mà là lệch pha vì OT 😉", "Đừng vắt sức bò nữa, hết sữa tới nơi rồi 🥛",
+        "Uống sữa cho thông minh, mà thông minh quá lại bị giao thêm việc 🍼", "Moooo? Ai vừa nhắc chữ “họp gấp” đó, bò điếc đột xuất rồi 🙉",
+        "Nhai đi nhai lại một cọng cỏ, y hệt sửa đi sửa lại một bản nháp 🌾", "Bò chỉ muốn nằm dài trên đồng cỏ, ai mướn đi làm đâu 🌱",
+        "Làm thân bò sữa còn đỡ hơn làm biên bản họp 📋", "Nghỉ tay uống miếng nước đi, bò nhắc thiệt lòng đó 💧",
+        "Moooo… tiếng thở dài kéo dài từ sáng tới chiều 🐮", "Tan ca chưa để bò còn lắc chuông về chuồng 🔔",
+      ],
+      typing: [
+        "Gõ thong thả thôi, bò vừa nhai cỏ vừa đợi được 🌿", "Nhắn gì dài thế, xin nghỉ phép hay xin thêm việc đó 🐮",
+        "Gõ xong nhớ thưởng bò hộp sữa tươi nha 🥛", "Moooo… gõ lạch cạch nghe vui tai ghê, tiếp đi bạn 🐮",
+      ],
+      mad: [
+        "Chọc hoài là bò húc bay deadline qua bàn bạn đó 🐮", "Mòooo! Giận rồi, tắt máy đi gặm cỏ đây 🌿",
+        "Đừng chọc nữa, đổ hết bình sữa của bò bây giờ 🥛", "Bò hiền nhưng sừng bò không phải để trưng đâu nha 🐮",
+      ] }),
     luffygear5: {
       name: "Luffy Gear 5", svg: LUFFY_GEARS, css: LUFFY_GEARS_CSS, forms: LUFFY_FORMS,
       intro: "Gear 5 tới rồi, cười lên nào! ☁️",

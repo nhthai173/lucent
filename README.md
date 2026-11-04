@@ -29,7 +29,7 @@ Lucent không có phụ thuộc nào. Trình cài đặt chèn CSS/JS vào `app.
 - **Tạo cuộc họp Google Meet** từ menu của thanh công cụ chat.
 - **Phím tắt** để chuyển hội thoại và thao tác với tin nhắn bằng bàn phím.
 - **Tuỳ chọn hiệu năng:** giảm RAM, tắt tự cập nhật, giảm tải khi cửa sổ bị ẩn, tắt chụp màn hình và gọi điện của Zalo nếu không dùng.
-- **Pet:** bốn nhân vật nhỏ ở góc màn hình, có nhiều trạng thái, có thể tắt.
+- **Pet:** sáu nhân vật nhỏ ở góc màn hình, có nhiều trạng thái, có thể tắt.
 
 ### Theme
 
@@ -64,9 +64,9 @@ Nút con mắt ở thanh bên mở bảng tuỳ chọn: che nội dung, kiểu h
 
 ### Pet
 
-Riêng Mập có thêm ba trò sóng biển: lướt sóng, lặn xuống sủi bong bóng và sóng triều dâng ngập người.
+Riêng Mập có thêm ba trò sóng biển (lướt sóng, lặn xuống sủi bong bóng, sóng triều dâng), Bò Sữa có thêm bốn trò (uống sữa, gặm cỏ, lắc chuông, ngập sữa).
 
-Có năm nhân vật: Mochi, Mun, Bông, Mập (cá mập) và Luffy Gear 5. Pet tự đi dạo trong vùng chat, nói vài câu ngẫu nhiên và đổi trạng thái theo cách bạn tương tác:
+Có sáu nhân vật: Mochi, Mun, Bông, Mập (cá mập), Bò Sữa và Luffy Gear 5. Pet tự đi dạo trong vùng chat, nói vài câu ngẫu nhiên và đổi trạng thái theo cách bạn tương tác:
 
 | Trạng thái | Khi nào |
 |---|---|
